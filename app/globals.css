@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #FEF3E2;
   --foreground: #171717;
 }
 
@@ -24,3 +24,27 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.btn-login{
+  background-color: #FA812F;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.color-primary{
+  color: #FA812F;
+}
+
+.color-secondary{
+  color: #FFCF50;
+}
+
+.bg-main{
+  background-color: #FEF3E2;
+}
+
+
+
