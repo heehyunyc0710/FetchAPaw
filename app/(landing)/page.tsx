@@ -7,7 +7,8 @@ import { handleLogin } from "@/utils/authentication";
 import Script from "next/script";
 import Image from "next/image";
 const LandingPage = () => {
-  const [pageLoading, setPageLoading] = useState(true);
+  const [pageLoading, setPageLoading] = useState<boolean>(true);
+  const [loginModalOpen, setLoginModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const loadScript = () => {
@@ -35,13 +36,13 @@ const LandingPage = () => {
         >
           <div
             id="slogan"
-            className=" flex flex-col gap-4 w-full h-[50%] justify-between items-start"
+            className=" flex flex-col gap-4 w-full h-[55%] justify-between items-start"
           >
             <div>
-              <h2 className="text-8xl font-bold text-[#FFD700] capitalize mb-6">
+              <h2 className="text-8xl font-bold text-yellow-500 capitalize mb-6">
                 Paws in need,
               </h2>
-              <h2 className="text-7xl font-bold text-[#FFD700] capitalize">
+              <h2 className="text-7xl font-bold text-yellow-500 capitalize">
                 hearts to feed.
               </h2>
             </div>
@@ -56,10 +57,10 @@ const LandingPage = () => {
                     repeat: 2,
                   },
                 }}
-                onClick={handleLogin}
-                className="underline cursor-pointer text-2xl"
+                onClick={()=>setLoginModalOpen(true)}
+                className=" cursor-pointer text-xl border-2 border-yellow-500 bg-yellow-500 text-zinc-700 rounded-full p-4"
               >
-                Feed a <i className="fa-solid fa-bone fa-2xl " style={{ transform: 'rotate(-15deg)' }}></i>
+                Feed a <i className="fa-solid fa-bone fa-2xl mx-2 " style={{ transform: 'rotate(-15deg)' }}></i>
               today
               </motion.p>
              

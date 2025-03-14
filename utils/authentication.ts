@@ -1,14 +1,14 @@
 // Function to handle login
-export const handleLogin = async () => {
-  const response = await fetch("/auth/login", {
+export const handleLogin = async ({username, email}: {username: string, email: string}) => {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
     method: "POST",
     credentials: "include",
     headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: "User Name", // Replace with actual user input
-        email: "user@example.com", // Replace with actual user input
+        name: username, 
+        email: email, 
       }),
     });
   
