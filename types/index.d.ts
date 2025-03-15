@@ -13,3 +13,12 @@ export interface SearchResults {
   next?: string;
   prev?: string;
 }
+
+export interface ILocation {
+  city: string;
+  county: string;
+  latitude: number;
+  longitude: number;
+  state: string;
+  zip_code: string;
+}

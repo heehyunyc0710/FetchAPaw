@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Gilda_Display, Poppins } from "next/font/google";
 import "./globals.css";
 import { AuthContextProvider } from "@/contexts/AuthContext";
+import { DogContextProvider } from "@/contexts/DogContext";
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
@@ -41,20 +42,20 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  
   return (
     <AuthContextProvider>
-
-    <html
-      lang="en"
-      className={`bg-main ${poppins.variable} ${gildaDisplay.variable}`}
-    >
-      <body className={`${poppins.className} px-10`}>
-        <Navbar />
-        {children}
-        <Footer />
-      </body>
-    </html>
+      <DogContextProvider>
+        <html
+          lang="en"
+          className={`bg-main ${poppins.variable} ${gildaDisplay.variable}`}
+        >
+          <body className={`${poppins.className} px-10`}>
+            <Navbar />
+            {children}
+            <Footer />
+          </body>
+        </html>
+      </DogContextProvider>
     </AuthContextProvider>
   );
 }

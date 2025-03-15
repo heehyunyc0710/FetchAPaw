@@ -7,7 +7,14 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { Heart } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-
+import { useRouter } from "next/navigation";
+import { useDogSearch } from "@/contexts/DogContext";
+import {
+  fetchDogBreeds,
+  fetchDogMatch,
+  fetchDogs,
+  handleDogSearch,
+} from "@/utils/getData";
 const Search = () => {
   const [breeds, setBreeds] = useState<string[]>([]);
   const [selectedBreeds, setSelectedBreeds] = useState<string[]>([]);
@@ -20,13 +27,15 @@ const Search = () => {
   const [searchResults, setSearchResults] = useState<SearchResults | null>(
     null
   );
-  const [dogs, setDogs] = useState<Dog[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [sort, setSort] = useState<string>("breed:asc");
-  const [favorites, setFavorites] = useState<string[]>([]);
+  // const [favorites, setFavorites] = useState<string[]>([]);
+  // const [dogs, setDogs] = useState<Dog[]>([]);
   const [matchResult, setMatchResult] = useState<Dog | null>(null);
-
+  const router = useRouter();
   const [from, setFrom] = useState<number>(0);
+  const { dogs, setDogs } = useDogSearch();
+  const { favorites, setFavorites } = useDogSearch();
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
@@ -36,20 +45,15 @@ const Search = () => {
     }
   };
   useEffect(() => {
-    const fetchBreeds = async () => {
+    const getBreeds = async () => {
       try {
-        const response = await axios.get<string[]>(
-          `${process.env.NEXT_PUBLIC_API_URL}/dogs/breeds`,
-          { withCredentials: true }
-        );
-        setBreeds(
-          response.data.sort((a: string, b: string) => a.localeCompare(b))
-        );
+        const breeds = await fetchDogBreeds();
+        setBreeds(breeds.sort((a: string, b: string) => a.localeCompare(b)));
       } catch (error) {
         console.error("Error fetching breeds:", error);
       }
     };
-    fetchBreeds();
+    getBreeds();
   }, []);
 
   const searchDogs = async () => {
@@ -79,21 +83,16 @@ const Search = () => {
       if (ageMax) params.append("ageMax", ageMax);
 
       // Update API call to use pagination and server-side sorting
-      const searchResponse = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/dogs/search?${params.toString()}`,
-        { withCredentials: true }
-      );
-      console.log("searchResponse", searchResponse.data);
-      setSearchResults(searchResponse.data);
+      const searchResponse = await handleDogSearch(params.toString());
 
-      if (searchResponse.data.resultIds.length > 0) {
-        const dogsResponse = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/dogs`,
-          searchResponse.data.resultIds,
-          { withCredentials: true }
-        );
+      setSearchResults(searchResponse);
 
-        setDogs(dogsResponse.data);
+      if (searchResponse.resultIds.length > 0) {
+        const dogsResponse = await fetchDogs({
+          dogIds: searchResponse.resultIds,
+        });
+
+        setDogs(dogsResponse);
       }
     } catch (error) {
       console.error("Error searching dogs:", error);
@@ -136,32 +135,28 @@ const Search = () => {
   };
 
   const toggleFavorite = (dogId: string) => {
-    setFavorites((prev) =>
+    setFavorites((prev: string[]) =>
       prev.includes(dogId)
-        ? prev.filter((id) => id !== dogId)
+        ? prev.filter((id: string) => id !== dogId)
         : [...prev, dogId]
     );
   };
 
   const generateMatch = async () => {
     try {
-      const response = await axios.post<{ match: string }>(
-        `${process.env.NEXT_PUBLIC_API_URL}/dogs/match`,
-        favorites,
-        { withCredentials: true }
-      );
+      const response = await fetchDogMatch({ favorites });
 
       // Fetch matched dog details
-      const matchResponse = await axios.post<Dog[]>(
-        `${process.env.NEXT_PUBLIC_API_URL}/dogs`,
-        [response.data.match],
-        { withCredentials: true }
-      );
+      const matchResponse = await fetchDogs({ dogIds: [response.match] });
 
-      setMatchResult(matchResponse.data[0]);
+      setMatchResult(matchResponse[0]);
     } catch (error) {
       console.error("Error generating match:", error);
     }
+  };
+
+  const handleViewDog = async (dogId: string) => {
+    router.push(`/dogs/${dogId}`);
   };
 
   return (
@@ -171,10 +166,9 @@ const Search = () => {
       transition={{ duration: 0.5 }}
       className="container mx-auto p-4"
     >
-     <div className="flex justify-center items-center w-full my-10">
-     <h1 className="text-3xl font-bold mb-6">Find Your Perfect Dog</h1>
-   
-     </div>
+      <div className="flex justify-center items-center w-full my-10">
+        <h1 className="text-3xl font-bold mb-6">Find Your Perfect Dog</h1>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         {/* Breed filter */}
@@ -269,46 +263,47 @@ const Search = () => {
 
       {/* Pagination */}
       {searchResults && (
-     
-          <div className="flex gap-4 mb-6 items-center justify-between w-full">
+        <div className="flex gap-4 mb-6 items-center justify-between w-full">
           <div>
-              <button
-                onClick={generateMatch}
-                disabled={favorites.length === 0}
-                className={` bg-orange-500 text-white px-4 py-2 rounded disabled:opacity-50  ${
-                  favorites.length === 0 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
-                }`}
-              >
-                View Match ({favorites.length})
-              </button>
-              <button
-                onClick={() => setFavorites([])}
-                disabled={favorites.length === 0}
-                className={`ml-4 bg-orange-600 text-white px-4 py-2 rounded disabled:opacity-50  ${
-                  favorites.length === 0 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
-                }`}
-              >
-                Clear Favorites
-              </button>
-            </div>
-            <div className="flex gap-2 items-center">
-              <p className="text-sm ">Sort by</p>
-              <select
-                value={sort}
-                onChange={(e) => setSort(e.target.value)}
-                className="bg-white border-yellow-300 rounded h-[40px] px-2 cursor-pointer"
-              >
-                <option value="breed:asc">Breed (A-Z)</option>
-                <option value="breed:desc">Breed (Z-A)</option>
-                <option value="age:asc">Age (Youngest first)</option>
-                <option value="age:desc">Age (Oldest first)</option>
-                <option value="name:asc">Name (A-Z)</option>
-                <option value="name:desc">Name (Z-A)</option>
-              </select>
-            </div>
-            
+            <button
+              onClick={generateMatch}
+              disabled={favorites.length === 0}
+              className={` bg-orange-500 text-white px-4 py-2 rounded disabled:opacity-50  ${
+                favorites.length === 0
+                  ? "opacity-50 cursor-not-allowed"
+                  : "cursor-pointer"
+              }`}
+            >
+              View Match ({favorites.length})
+            </button>
+            <button
+              onClick={() => setFavorites([])}
+              disabled={favorites.length === 0}
+              className={`ml-4 bg-orange-600 text-white px-4 py-2 rounded disabled:opacity-50  ${
+                favorites.length === 0
+                  ? "opacity-50 cursor-not-allowed"
+                  : "cursor-pointer"
+              }`}
+            >
+              Clear Favorites
+            </button>
           </div>
-       
+          <div className="flex gap-2 items-center">
+            <p className="text-sm ">Sort by</p>
+            <select
+              value={sort}
+              onChange={(e) => setSort(e.target.value)}
+              className="bg-white border-yellow-300 rounded h-[40px] px-2 cursor-pointer"
+            >
+              <option value="breed:asc">Breed (A-Z)</option>
+              <option value="breed:desc">Breed (Z-A)</option>
+              <option value="age:asc">Age (Youngest first)</option>
+              <option value="age:desc">Age (Oldest first)</option>
+              <option value="name:asc">Name (A-Z)</option>
+              <option value="name:desc">Name (Z-A)</option>
+            </select>
+          </div>
+        </div>
       )}
 
       {/* Dog results grid */}
@@ -321,16 +316,20 @@ const Search = () => {
         {dogs.map((dog) => (
           <div
             key={dog.id}
-            className="dog-card relative bg-white/70 p-4 rounded-lg border border-transparent hover:border-yellow-300 transition-all duration-300"
+            onClick={() => handleViewDog(dog.id)}
+            className="dog-card relative bg-white/70 p-4 rounded-lg border border-transparent hover:border-yellow-300 transition-all duration-300 cursor-pointer"
           >
             <button
-              onClick={() => toggleFavorite(dog.id)}
-              className="absolute top-2 right-2  bg-black/50 rounded-full p-2 cursor-pointer transition-all duration-300"
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleFavorite(dog.id);
+              }}
+              className="absolute top-2 right-2 bg-black/50 rounded-full p-2 cursor-pointer transition-all duration-300"
             >
               {favorites.includes(dog.id) ? (
                 <Heart className="text-red-400 fill-current " />
               ) : (
-                <Heart className="text-white  fill-current " />
+                <Heart className="text-white fill-current " />
               )}
             </button>
             <DogInfoCard dog={dog} />

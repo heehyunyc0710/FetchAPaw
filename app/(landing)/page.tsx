@@ -6,9 +6,14 @@ import Loader from "@/components/Loader";
 import Image from "next/image";
 import Script from "next/script";
 import { LoginModal } from "@/components/LoginModal";
+import { useAuth } from "@/contexts/AuthContext";
+import { useRouter } from "next/navigation";
+import { PawPrint } from "lucide-react";
 const LandingPage = () => {
   const [pageLoading, setPageLoading] = useState<boolean>(true);
   const [loginModalOpen, setLoginModalOpen] = useState<boolean>(false);
+  const { user } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
     const loadScript = () => {
@@ -47,25 +52,40 @@ const LandingPage = () => {
               </h2>
             </div>
             <div className="flex items-center gap-2  font-bold color-primary hover:scale-105 transition-all duration-400">
-              <motion.p
-                animate={{
-                  y: [0, -10, 0],
-                  transition: {
-                    duration: 1,
-                    ease: "linear",
-                    repeat: 2,
-                  },
-                }}
-                onClick={() => setLoginModalOpen(true)}
-                className=" cursor-pointer text-xl   bg-yellow-500 text-zinc-700 rounded-full p-4"
-              >
-                Feed a
-                <i
-                  className="fa-solid fa-bone fa-2xl mx-2  "
-                  style={{ transform: "rotate(-15deg)" }}
-                ></i>
-                today
-              </motion.p>
+              {!user && (
+                <motion.p
+                  animate={{
+                    y: [0, -10, 0],
+                    transition: {
+                      duration: 1,
+                      ease: "linear",
+                      repeat: 2,
+                    },
+                  }}
+                  onClick={() => setLoginModalOpen(true)}
+                  className=" cursor-pointer text-xl   bg-yellow-500 text-zinc-700 rounded-full p-4"
+                >
+                  Feed a
+                  <i
+                    className="fa-solid fa-bone fa-2xl mx-2  "
+                    style={{ transform: "rotate(-15deg)" }}
+                  ></i>
+                  today
+                </motion.p>
+              )}
+              {user && (
+                <div
+                  onClick={() => router.push("/search")}
+                  className="flex items-center gap-2 cursor-pointer text-xl font-bold color-primary hover:scale-105 transition-all duration-400"
+                >
+                  Find your 
+                  <div className="flex items-center gap-1">
+                    <PawPrint />
+                    fect
+                  </div>
+                   match here
+                </div>
+              )}
             </div>
             <LoginModal
               loginModalOpen={loginModalOpen}
