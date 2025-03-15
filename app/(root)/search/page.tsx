@@ -5,7 +5,7 @@ import { MatchDialog } from "@/components/dogs/MatchDialog";
 import { Dog, SearchResults } from "@/types";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { Heart, SortAsc, SortDesc } from "lucide-react";
+import { Heart } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 const Search = () => {
@@ -25,7 +25,7 @@ const Search = () => {
   const [sort, setSort] = useState<string>("breed:asc");
   const [favorites, setFavorites] = useState<string[]>([]);
   const [matchResult, setMatchResult] = useState<Dog | null>(null);
-  const [currentPage, setCurrentPage] = useState<number>(0);
+
   const [from, setFrom] = useState<number>(0);
 
   const handleSelectAll = (checked: boolean) => {
@@ -53,7 +53,6 @@ const Search = () => {
   }, []);
 
   const searchDogs = async () => {
- 
     // setFrom(page * parseInt(size));
     setLoading(true);
     try {
@@ -79,7 +78,6 @@ const Search = () => {
       if (ageMin) params.append("ageMin", ageMin);
       if (ageMax) params.append("ageMax", ageMax);
 
-   
       // Update API call to use pagination and server-side sorting
       const searchResponse = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/dogs/search?${params.toString()}`,
@@ -94,7 +92,7 @@ const Search = () => {
           searchResponse.data.resultIds,
           { withCredentials: true }
         );
-       
+
         setDogs(dogsResponse.data);
       }
     } catch (error) {
@@ -119,16 +117,19 @@ const Search = () => {
 
   useEffect(() => {
     searchDogs();
-  }, [from, size, sort, selectedBreeds, zipCodes, ageMin, ageMax]);
-  
+  }, [from, size, sort]);
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [from]);
 
   const handlePagination = (direction: "prev" | "next") => {
     if (!searchResults) return;
-  
-    const nextFrom = direction === "next" 
-      ? searchResults.next?.split('from=')[1]?.split('&')[0] 
-      : searchResults.prev?.split('from=')[1]?.split('&')[0];
-  
+
+    const nextFrom =
+      direction === "next"
+        ? searchResults.next?.split("from=")[1]?.split("&")[0]
+        : searchResults.prev?.split("from=")[1]?.split("&")[0];
+
     if (nextFrom) {
       setFrom(parseInt(nextFrom, 10));
     }
@@ -263,58 +264,44 @@ const Search = () => {
         Clear Filters
       </button>
 
-      {/* Results count */}
-      {searchResults && (
-        <p className="mb-4">Found {searchResults.total} dogs</p>
-      )}
-
       {/* Pagination */}
       {searchResults && (
-        <div className="flex gap-4 mb-6 items-center justify-between">
-          <div className="flex gap-4 items-center">
-          <button
-      onClick={() => handlePagination('prev')}
-      disabled={!searchResults.prev}
-      className="bg-yellow-500 text-zinc-700 px-4 py-2 rounded disabled:opacity-50"
-    >
-      Previous
-    </button>
-
-            <span>
-      {from + 1} - {Math.min(from + parseInt(size), searchResults.total)} of {searchResults.total}
-    </span>
-
-    <button
-      onClick={() => handlePagination('next')}
-      disabled={!searchResults.next}
-      className="bg-yellow-500 text-zinc-700 px-4 py-2 rounded disabled:opacity-50"
-    >
-      Next
-    </button>
-
-            <button
-              onClick={generateMatch}
-              disabled={favorites.length === 0}
-              className="ml-4 bg-green-500 text-white px-4 py-2 rounded disabled:opacity-50"
-            >
-              View Match ({favorites.length})
-            </button>
-          </div>
+     
+          <div className="flex gap-4 mb-6 items-center justify-between w-full">
           <div>
-            <select
-              value={sort}
-              onChange={(e) => setSort(e.target.value)}
-              className="bg-white border-yellow-300 rounded h-[40px] px-2"
-            >
-              <option value="breed:asc">Breed (A-Z)</option>
-              <option value="breed:desc">Breed (Z-A)</option>
-              <option value="age:asc">Age (Youngest first)</option>
-              <option value="age:desc">Age (Oldest first)</option>
-              <option value="name:asc">Name (A-Z)</option>
-              <option value="name:desc">Name (Z-A)</option>
-            </select>
+              <button
+                onClick={generateMatch}
+                disabled={favorites.length === 0}
+                className=" bg-orange-500 text-white px-4 py-2 rounded disabled:opacity-50"
+              >
+                View Match ({favorites.length})
+              </button>
+              <button
+                onClick={() => setFavorites([])}
+                disabled={favorites.length === 0}
+                className="ml-4 bg-orange-600 text-white px-4 py-2 rounded disabled:opacity-50"
+              >
+                Clear Favorites
+              </button>
+            </div>
+            <div className="flex gap-2 items-center">
+              <p className="text-sm ">Sort by</p>
+              <select
+                value={sort}
+                onChange={(e) => setSort(e.target.value)}
+                className="bg-white border-yellow-300 rounded h-[40px] px-2"
+              >
+                <option value="breed:asc">Breed (A-Z)</option>
+                <option value="breed:desc">Breed (Z-A)</option>
+                <option value="age:asc">Age (Youngest first)</option>
+                <option value="age:desc">Age (Oldest first)</option>
+                <option value="name:asc">Name (A-Z)</option>
+                <option value="name:desc">Name (Z-A)</option>
+              </select>
+            </div>
+            
           </div>
-        </div>
+       
       )}
 
       {/* Dog results grid */}
@@ -327,22 +314,46 @@ const Search = () => {
         {dogs.map((dog) => (
           <div
             key={dog.id}
-            className="dog-card relative bg-white/70 p-4 rounded-lg"
+            className="dog-card relative bg-white/70 p-4 rounded-lg border border-transparent hover:border-yellow-300 transition-all duration-300"
           >
             <button
               onClick={() => toggleFavorite(dog.id)}
-              className="absolute top-2 right-2 z-10 bg-black/50 rounded-full p-2 cursor-pointer transition-all duration-300"
+              className="absolute top-2 right-2  bg-black/50 rounded-full p-2 cursor-pointer transition-all duration-300"
             >
               {favorites.includes(dog.id) ? (
-                <Heart className="text-red-400 fill-current z-10" />
+                <Heart className="text-red-400 fill-current " />
               ) : (
-                <Heart className="text-white  fill-current z-10" />
+                <Heart className="text-white  fill-current " />
               )}
             </button>
             <DogInfoCard dog={dog} />
           </div>
         ))}
       </motion.div>
+      {searchResults && (
+        <div className="flex gap-4 items-center w-full justify-center mb-10">
+          <button
+            onClick={() => handlePagination("prev")}
+            disabled={!searchResults.prev}
+            className="bg-yellow-500 text-zinc-700 px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
+          >
+            Previous
+          </button>
+
+          <span>
+            {from + 1} - {Math.min(from + parseInt(size), searchResults.total)}{" "}
+            of {searchResults.total}
+          </span>
+
+          <button
+            onClick={() => handlePagination("next")}
+            disabled={!searchResults.next}
+            className="bg-yellow-500 text-zinc-700 px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
+          >
+            Next
+          </button>
+        </div>
+      )}
 
       {dogs.length === 0 && !loading && (
         <p className="text-center py-8">No dogs found matching your criteria</p>
