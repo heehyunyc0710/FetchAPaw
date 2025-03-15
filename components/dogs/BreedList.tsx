@@ -1,4 +1,3 @@
-
 import {
   Select,
   SelectContent,
@@ -26,11 +25,9 @@ const BreedList: React.FC<BreedListProps> = ({
   setSelectOpen,
   selectRef,
 }) => {
-
-
   return (
     <Select
-    open={selectOpen}
+      open={selectOpen}
       value={selectedBreeds.join(",")}
       onValueChange={(value) => {
         if (!selectedBreeds.includes(value)) {
@@ -40,19 +37,21 @@ const BreedList: React.FC<BreedListProps> = ({
         }
       }}
     >
-      <SelectTrigger onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setSelectOpen(!selectOpen);
-                }}
-                className="w-full h-[40px] border-yellow-300 bg-white/70">
+      <SelectTrigger
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setSelectOpen(!selectOpen);
+        }}
+        className="w-full h-[40px] border-yellow-300 bg-white/70 cursor-pointer"
+      >
         <SelectValue placeholder="Select Breeds">
-                  {selectedBreeds.length > 0
-                    ? `${selectedBreeds.length} breed${
-                        selectedBreeds.length > 1 ? "s" : ""
-                      } selected`
-                    : null}
-                </SelectValue>
+          {selectedBreeds.length > 0
+            ? `${selectedBreeds.length} breed${
+                selectedBreeds.length > 1 ? "s" : ""
+              } selected`
+            : null}
+        </SelectValue>
       </SelectTrigger>
       <SelectContent ref={selectRef} className="bg-white">
         <div className="px-2 py-1 border-b">

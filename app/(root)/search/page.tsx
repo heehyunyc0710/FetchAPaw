@@ -171,7 +171,10 @@ const Search = () => {
       transition={{ duration: 0.5 }}
       className="container mx-auto p-4"
     >
-      <h1 className="text-2xl font-bold mb-6">Find Your Perfect Dog</h1>
+     <div className="flex justify-center items-center w-full my-10">
+     <h1 className="text-3xl font-bold mb-6">Find Your Perfect Dog</h1>
+   
+     </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         {/* Breed filter */}
@@ -230,7 +233,7 @@ const Search = () => {
           <select
             value={size}
             onChange={(e) => setSize(e.target.value)}
-            className="w-full p-2 border rounded h-[40px] border-yellow-300 bg-white/70 text-sm "
+            className="w-full p-2 border rounded h-[40px] border-yellow-300 bg-white/70 text-sm cursor-pointer"
           >
             <option value="10">10</option>
             <option value="25">25</option>
@@ -272,14 +275,18 @@ const Search = () => {
               <button
                 onClick={generateMatch}
                 disabled={favorites.length === 0}
-                className=" bg-orange-500 text-white px-4 py-2 rounded disabled:opacity-50"
+                className={` bg-orange-500 text-white px-4 py-2 rounded disabled:opacity-50  ${
+                  favorites.length === 0 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+                }`}
               >
                 View Match ({favorites.length})
               </button>
               <button
                 onClick={() => setFavorites([])}
                 disabled={favorites.length === 0}
-                className="ml-4 bg-orange-600 text-white px-4 py-2 rounded disabled:opacity-50"
+                className={`ml-4 bg-orange-600 text-white px-4 py-2 rounded disabled:opacity-50  ${
+                  favorites.length === 0 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+                }`}
               >
                 Clear Favorites
               </button>
@@ -289,7 +296,7 @@ const Search = () => {
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value)}
-                className="bg-white border-yellow-300 rounded h-[40px] px-2"
+                className="bg-white border-yellow-300 rounded h-[40px] px-2 cursor-pointer"
               >
                 <option value="breed:asc">Breed (A-Z)</option>
                 <option value="breed:desc">Breed (Z-A)</option>
