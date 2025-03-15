@@ -2,7 +2,9 @@ import React from "react";
 import Image from "next/image";
 import { Dog } from "@/types";
 import { MapPinIcon, CakeIcon, DogIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 const DogInfoCard = ({ dog }: { dog: Dog }) => {
+  const router = useRouter();
   return (
     <div>
       <img
@@ -29,7 +31,9 @@ const DogInfoCard = ({ dog }: { dog: Dog }) => {
           <MapPinIcon className="w-4 h-4" />
           <p className="font-semibold"> Zip: </p>
           <p>{dog.zip_code}</p>
-        </div></div>
+        </div>
+        </div>
+       
       </div>
     </div>
   );

@@ -308,13 +308,17 @@ const Search = () => {
 
       {/* Dog results grid */}
       <motion.div
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 min-h-[500px]"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.5 }}
       >
         {dogs.map((dog) => (
-          <div
+           <motion.div
+           initial={{ opacity: 0}}
+           animate={{ opacity: 1}}
+           transition={{ duration: 0.5, delay: 0.5 }}
+           
             key={dog.id}
             onClick={() => handleViewDog(dog.id)}
             className="dog-card relative bg-white/70 p-4 rounded-lg border border-transparent hover:border-yellow-300 transition-all duration-300 cursor-pointer"
@@ -333,7 +337,7 @@ const Search = () => {
               )}
             </button>
             <DogInfoCard dog={dog} />
-          </div>
+          </motion.div>
         ))}
       </motion.div>
       {searchResults && (
