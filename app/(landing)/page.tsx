@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Loader from "@/components/Loader";
 import Image from "next/image";
 import Script from "next/script";
-import { LoginModal } from "@/components/LoginModal";
+import { LoginModal } from "@/components/modals/LoginModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { PawPrint } from "lucide-react";
@@ -34,7 +34,7 @@ const LandingPage = () => {
 
       {!pageLoading && (
         <motion.div
-          className=" h-[calc(100vh-200px)] flex justify-center items-center px-20"
+          className=" h-[calc(100vh-200px)] flex justify-center items-center md:px-[5%] px-[3%]"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: pageLoading ? 0 : 1, y: pageLoading ? 20 : 0 }}
           transition={{ duration: 0.5 }}
@@ -44,13 +44,14 @@ const LandingPage = () => {
             className=" flex flex-col gap-4 w-full h-[55%] justify-between items-start"
           >
             <div>
-              <h2 className="text-8xl font-bold text-yellow-500 capitalize mb-6">
+              <h2 className="lg:text-8xl md:text-6xl text-5xl font-bold text-yellow-500 capitalize mb-8">
                 Paws in need,
               </h2>
-              <h2 className="text-7xl font-bold text-yellow-500 capitalize">
+              <h2 className="lg:text-6xl md:text-5xl text-4xl font-bold text-yellow-500 capitalize">
                 hearts to feed.
               </h2>
             </div>
+
             <div className="flex items-center gap-2  font-bold color-primary hover:scale-105 transition-all duration-400">
               {!user && (
                 <motion.p
@@ -76,23 +77,19 @@ const LandingPage = () => {
               {user && (
                 <div
                   onClick={() => router.push("/search")}
-                  className="flex items-center gap-2 cursor-pointer text-xl font-bold color-primary hover:scale-105 transition-all duration-400"
+                  className="flex items-center gap-2 cursor-pointer text-2xl md:text-3xl font-bold color-primary hover:scale-101 transition-all duration-400 mt-10"
                 >
-                  Find your 
+                  Find your
                   <div className="flex items-center gap-1">
                     <PawPrint />
                     fect
                   </div>
-                   match here
+                  match here
                 </div>
               )}
             </div>
-            <LoginModal
-              loginModalOpen={loginModalOpen}
-              setLoginModalOpen={setLoginModalOpen}
-            />
           </div>
-
+          
           <Image
             src="/images/dog.png"
             alt="landing-image"

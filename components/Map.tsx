@@ -33,7 +33,7 @@ export const Map = ({
     <MapContainer
       center={position}
       zoom={13}
-      className="w-[100%] h-[100%]"
+      className="w-[100%] h-[100%] z-0"
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

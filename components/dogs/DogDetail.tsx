@@ -15,8 +15,8 @@ const DogDetail = ({ dog }: { dog: Dog }) => {
   }, [dog]);
 
   return (
-    <div className="flex  items-center justify-between h-[80vh] px-20 gap-10">
-      <div className="w-[fit-content] max-w-[80%] h-[100%] overflow-hidden rounded-lg">
+    <div className="flex  items-center justify-between h-[80vh] w-screen md:px-20 px-6 gap-10">
+      <div className="w-[fit-content]  md:max-w-[60%] max-w-[65%] h-[100%] overflow-hidden rounded-lg flex items-center justify-center">
         {dog && dog.img && (
           <img src={dog.img} alt={dog.name} width={1000} height={1000} />
         )}
@@ -50,7 +50,7 @@ const DogDetail = ({ dog }: { dog: Dog }) => {
             )}
           </div>
           {location && (
-            <Map  latitude={location.latitude} longitude={location.longitude} />
+            <Map latitude={location.latitude} longitude={location.longitude} />
           )}
         </div>
       )}

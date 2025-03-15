@@ -4,11 +4,14 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { LoginButton } from "./LoginButton";
-import { LoginModal } from "./LoginModal";
+import { LoginButton } from "./modals/LoginButton";
+import { LoginModal } from "./modals/LoginModal";
+import AboutModal from "./modals/AboutModal";
+import { AboutButton } from "./modals/AboutButton";
 
 const Navbar: React.FC = () => {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [aboutModalOpen, setAboutModalOpen] = useState(false);
   const { user, logout } = useAuth();
 
   return (
@@ -36,12 +39,7 @@ const Navbar: React.FC = () => {
         >
           Home
         </Link>
-        <Link
-          href="/about"
-          className="p-0  px-4  rounded  transition-colors  cursor-pointer hover:font-semibold"
-        >
-          About
-        </Link>
+        <AboutButton onClick={() => setAboutModalOpen(true)} />
         <Link
           href="/contact"
           className="p-0   px-4  rounded  transition-colors  cursor-pointer hover:font-semibold"
@@ -67,6 +65,14 @@ const Navbar: React.FC = () => {
         loginModalOpen={loginModalOpen}
         setLoginModalOpen={setLoginModalOpen}
       />
+      {aboutModalOpen && (
+        <div className="absolute top-0 left-0 w-full h-full">
+          <AboutModal
+            aboutModalOpen={aboutModalOpen}
+            setAboutModalOpen={setAboutModalOpen}
+          />
+        </div>
+      )}
     </motion.header>
   );
 };

@@ -324,12 +324,12 @@ const Search = () => {
                 e.stopPropagation();
                 toggleFavorite(dog.id);
               }}
-              className="absolute top-2 right-2 bg-black/50 rounded-full p-2 cursor-pointer transition-all duration-300"
+              className="absolute top-2 right-2 bg-white border border-yellow-500 rounded-full p-2 cursor-pointer transition-all duration-300"
             >
               {favorites.includes(dog.id) ? (
-                <Heart className="text-red-400 fill-current " />
+                <Heart className="text-red-500 fill-current " />
               ) : (
-                <Heart className="text-white fill-current " />
+                <Heart className="text-yellow-500 fill-current " />
               )}
             </button>
             <DogInfoCard dog={dog} />
