@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #FEF3E2;
+  --background: #fef3e2;
   --foreground: #171717;
 }
 
@@ -25,26 +25,24 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.btn-login{
-  background-color: #FA812F;
+.btn-login {
+  background-color: #fa812f;
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
+  padding: 12px 24px;
+  border-radius: 20px;
   cursor: pointer;
+  font-weight: bold;
 }
 
-.color-primary{
-  color: #FA812F;
+.color-primary {
+  color: #fa812f;
 }
 
-.color-secondary{
-  color: #FFCF50;
+.color-secondary {
+  color: #ffcf50;
 }
 
-.bg-main{
-  background-color: #FEF3E2;
+.bg-main {
+  background-color: #fef3e2;
 }
-
-
-

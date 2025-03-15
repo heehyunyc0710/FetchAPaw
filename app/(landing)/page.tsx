@@ -1,11 +1,11 @@
 "use client";
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import Loader from "@/components/Loader";
-import { handleLogin } from "@/utils/authentication";
-import Script from "next/script";
 import Image from "next/image";
+import Script from "next/script";
+import { LoginModal } from "@/components/LoginModal";
 const LandingPage = () => {
   const [pageLoading, setPageLoading] = useState<boolean>(true);
   const [loginModalOpen, setLoginModalOpen] = useState<boolean>(false);
@@ -46,10 +46,9 @@ const LandingPage = () => {
                 hearts to feed.
               </h2>
             </div>
-            <div className="flex items-center gap-2  font-bold color-primary">
+            <div className="flex items-center gap-2  font-bold color-primary hover:scale-105 transition-all duration-400">
               <motion.p
                 animate={{
-                  // jumping 3 times and stop
                   y: [0, -10, 0],
                   transition: {
                     duration: 1,
@@ -57,14 +56,21 @@ const LandingPage = () => {
                     repeat: 2,
                   },
                 }}
-                onClick={()=>setLoginModalOpen(true)}
-                className=" cursor-pointer text-xl border-2 border-yellow-500 bg-yellow-500 text-zinc-700 rounded-full p-4"
+                onClick={() => setLoginModalOpen(true)}
+                className=" cursor-pointer text-xl   bg-yellow-500 text-zinc-700 rounded-full p-4"
               >
-                Feed a <i className="fa-solid fa-bone fa-2xl mx-2 " style={{ transform: 'rotate(-15deg)' }}></i>
-              today
+                Feed a
+                <i
+                  className="fa-solid fa-bone fa-2xl mx-2  "
+                  style={{ transform: "rotate(-15deg)" }}
+                ></i>
+                today
               </motion.p>
-             
             </div>
+            <LoginModal
+              loginModalOpen={loginModalOpen}
+              setLoginModalOpen={setLoginModalOpen}
+            />
           </div>
 
           <Image

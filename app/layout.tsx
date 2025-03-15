@@ -1,10 +1,9 @@
-import type { Metadata } from "next";
-import { Poppins, Gilda_Display } from "next/font/google";
-import "./globals.css";
-import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import Script from "next/script";
-
+import Navbar from "@/components/Navbar";
+import type { Metadata } from "next";
+import { Gilda_Display, Poppins } from "next/font/google";
+import "./globals.css";
+import { AuthContextProvider } from "@/contexts/AuthContext";
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
@@ -42,7 +41,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
   return (
+    <AuthContextProvider>
+
     <html
       lang="en"
       className={`bg-main ${poppins.variable} ${gildaDisplay.variable}`}
@@ -53,5 +55,6 @@ export default function RootLayout({
         <Footer />
       </body>
     </html>
+    </AuthContextProvider>
   );
 }
