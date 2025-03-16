@@ -1,5 +1,11 @@
 "use client";
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
 import axios from "axios";
 
 import { useRouter } from "next/navigation";
@@ -20,7 +26,8 @@ export const AuthContextProvider = ({
     null
   );
   const router = useRouter();
-  const validateUser = () => {
+
+  const validateUser = useCallback(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       try {
@@ -48,11 +55,11 @@ export const AuthContextProvider = ({
       setUser(null);
       router.push("/");
     }
-  };
+  }, [router]);
 
   useEffect(() => {
     validateUser();
-  }, []);
+  }, [validateUser]);
 
   const login = async (username: string, email: string) => {
     try {

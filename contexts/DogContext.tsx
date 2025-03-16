@@ -4,7 +4,7 @@ import { createContext, useContext, useState } from "react";
 
 interface DogSearchContextProps {
   dogs: Dog[];
-  setDogs: (dogs: Dog[]) => void;
+  setDogs: React.Dispatch<React.SetStateAction<Dog[]>>;
 
   favorites: string[];
   setFavorites: React.Dispatch<React.SetStateAction<string[]>>;
@@ -21,13 +21,10 @@ export const DogContextProvider = ({
 }) => {
   const [dogs, setDogs] = useState<Dog[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
- 
-
-
 
   return (
     <DogSearchContext.Provider
-      value={{ dogs, setDogs,  favorites, setFavorites }}
+      value={{ dogs, setDogs, favorites, setFavorites }}
     >
       {children}
     </DogSearchContext.Provider>

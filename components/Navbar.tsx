@@ -23,7 +23,7 @@ const Navbar: React.FC = () => {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.5 }}
-      className="mx-auto mt-5 px-6 py-8 flex items-center justify-between relative "
+      className="container mx-auto mt-5  py-8 flex items-center justify-between relative "
     >
       <div className="flex items-center">
         <Link href="/" className="flex items-center">

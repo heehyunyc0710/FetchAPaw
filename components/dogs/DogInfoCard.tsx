@@ -6,7 +6,7 @@ const DogInfoCard = ({ dog }: { dog: Dog }) => {
 
   return (
     <div>
-      <div className="relative w-full h-48">
+      <div className="relative w-full h-48 z-0">
         <Image
           src={dog.img}
           alt={dog.name}
