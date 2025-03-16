@@ -15,6 +15,7 @@ import { Bone, Heart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useDebounce } from "@/utils/hooks/useDebounce";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 
 const Search = () => {
   const [breeds, setBreeds] = useState<string[]>([]);
@@ -218,7 +219,7 @@ const Search = () => {
               value={zipCodes}
               onChange={(e) => setZipCodes(e.target.value)}
               placeholder="Comma-separated zip codes"
-              className="w-full p-2 border rounded h-[40px] border-yellow-300 bg-white/70 text-sm "
+              className="focus:outline-none focus:border-2 w-full p-2 border rounded h-[40px] border-zinc-600 shadow-md bg-white/70 text-sm "
             />
           </div>
 
@@ -232,7 +233,7 @@ const Search = () => {
                 min={0}
                 onChange={(e) => setAgeMin(e.target.value)}
                 placeholder="Min age"
-                className="w-full p-2 border rounded h-[40px] border-yellow-300 bg-white/70 text-sm "
+                className="focus:outline-none focus:border-2 w-full p-2 border rounded h-[40px] border-zinc-600 shadow-md bg-white/70 text-sm "
               />
               <input
                 type="number"
@@ -242,24 +243,30 @@ const Search = () => {
                 
                 onChange={(e) => setAgeMax(e.target.value)}
                 placeholder="Max age"
-                className="w-full p-2 border rounded h-[40px] border-yellow-300 bg-white/70 text-sm "
+                className="focus:outline-none focus:border-2 w-full p-2 border rounded h-[40px] border-zinc-600 shadow-md bg-white/70 text-sm "
               />
             </div>
           </div>
 
           {/* Results size */}
-          <div>
+          <div >
             <h2 className="font-semibold mb-2">Results per page</h2>
-            <select
+            
+            <Select
               value={size}
-              onChange={(e) => setSize(e.target.value)}
-              className="w-full p-2 border rounded h-[40px] border-yellow-300 bg-white/70 text-sm cursor-pointer"
+              onValueChange={(value) => setSize(value)}
             >
-              <option value="10">10</option>
-              <option value="25">25</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-            </select>
+              <SelectTrigger   className="w-full p-2 border rounded h-[40px] border-zinc-600 shadow-md bg-white/70 text-sm cursor-pointer"
+            >
+                <p className="text-sm ">{size}</p>
+              </SelectTrigger>
+              <SelectContent className="bg-white border-zinc-600">
+                <SelectItem className="cursor-pointer hover:bg-yellow-200" value="10">10</SelectItem>
+                <SelectItem className="cursor-pointer hover:bg-yellow-200" value="25">25</SelectItem>
+                <SelectItem className="cursor-pointer hover:bg-yellow-200" value="50">50</SelectItem>
+                <SelectItem className="cursor-pointer hover:bg-yellow-200" value="100">100</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
@@ -272,7 +279,7 @@ const Search = () => {
             setSize("25");
             searchDogs();
           }}
-          className="bg-white/50 text-zinc-700 px-4 py-2 rounded mb-8 cursor-pointer border border-yellow-600 hover:text-black "
+          className="bg-black/80 text-white px-4 py-2 rounded mb-8 cursor-pointer  hover:shadow-lg "
           disabled={loading}
         >
           Clear Filters
@@ -284,40 +291,45 @@ const Search = () => {
               <button
                 onClick={generateMatch}
                 disabled={favorites.length === 0}
-                className={` bg-orange-500 text-white px-4 py-2 rounded disabled:opacity-50  ${
+                className={` bg-orange-600 text-white px-4 py-2 rounded disabled:opacity-50 hover:shadow-lg  ${
                   favorites.length === 0
                     ? "opacity-50 cursor-not-allowed"
                     : "cursor-pointer"
                 }`}
               >
-                View Match ({favorites.length})
+                View Match 
               </button>
-              <button
+            {  favorites?.length > 0 && <button
                 onClick={() => setFavorites([])}
                 disabled={favorites.length === 0}
-                className={`ml-4 bg-orange-600 text-white px-4 py-2 rounded disabled:opacity-50  ${
+                className={`ml-4 bg-white/70 border border-orange-600 text-orange-600 px-4 py-2 rounded disabled:opacity-50 hover:shadow-lg  ${
                   favorites.length === 0
                     ? "opacity-50 cursor-not-allowed"
                     : "cursor-pointer"
                 }`}
               >
                 Clear Favorites
-              </button>
+              </button>}
             </div>
             <div className="flex gap-2 items-center">
-              <p className="text-sm ">Sort by</p>
-              <select
+             
+              <Select
                 value={sort}
-                onChange={(e) => setSort(e.target.value)}
-                className="bg-white border-yellow-300 rounded h-[40px] px-2 cursor-pointer"
+                onValueChange={(value) => setSort(value)}
+                
               >
-                <option value="breed:asc">Breed (A-Z)</option>
-                <option value="breed:desc">Breed (Z-A)</option>
-                <option value="age:asc">Age (Youngest first)</option>
-                <option value="age:desc">Age (Oldest first)</option>
-                <option value="name:asc">Name (A-Z)</option>
-                <option value="name:desc">Name (Z-A)</option>
-              </select>
+                <SelectTrigger className="bg-white border-zinc-600 rounded h-[40px] px-2 cursor-pointer">
+                <p className="text-sm ">Sort by</p>
+                </SelectTrigger>
+                <SelectContent className="bg-white border-zinc-600">
+                <SelectItem className="cursor-pointer hover:bg-yellow-200" value="breed:asc">Breed (A-Z)</SelectItem>
+                <SelectItem className="cursor-pointer hover:bg-yellow-200" value="breed:desc">Breed (Z-A)</SelectItem>
+                <SelectItem className="cursor-pointer hover:bg-yellow-200" value="age:asc">Age (Youngest first)</SelectItem>
+                <SelectItem className="cursor-pointer hover:bg-yellow-200" value="age:desc">Age (Oldest first)</SelectItem>
+                <SelectItem className="cursor-pointer hover:bg-yellow-200" value="name:asc">Name (A-Z)</SelectItem>
+                <SelectItem className="cursor-pointer hover:bg-yellow-200" value="name:desc">Name (Z-A)</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         )}
@@ -348,20 +360,18 @@ const Search = () => {
                 transition={{ duration: 0.5, delay: 0.5 }}
                 key={index}
                 onClick={() => handleViewDog(dog.id)}
-                className="dog-card relative bg-white/70 p-4 rounded-lg border border-transparent hover:border-yellow-300 transition-all duration-300 cursor-pointer"
+                className="dog-card relative bg-white/70 p-4 rounded-lg border border-transparent hover:shadow-lg transition-all duration-300 cursor-pointer"
               >
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     toggleFavorite(dog.id);
                   }}
-                  className="absolute top-2 right-2 bg-white border border-yellow-500 rounded-full p-2 cursor-pointer transition-all duration-300 z-10"
+                  className="absolute top-2 right-2 bg-white border border-yellow-500 rounded-full p-2 cursor-pointer transition-all duration-300 z-10   "
                 >
-                  {favorites.includes(dog.id) ? (
-                    <Heart className="text-red-500 fill-current z-5" />
-                  ) : (
-                    <Heart className="text-yellow-500 fill-current z-5" />
-                  )}
+                 
+                    <Heart className={`hover:text-red-500 fill-current z-5 ${favorites.includes(dog.id) ? "text-red-500 fill-current z-5" : "text-yellow-500 fill-current z-5"}`} />
+               
                 </button>
                 <DogInfoCard dog={dog} />
               </motion.div>
