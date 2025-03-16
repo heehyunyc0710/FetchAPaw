@@ -13,7 +13,7 @@ import {
 import { motion } from "framer-motion";
 import { Heart } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 const Search = () => {
   const [breeds, setBreeds] = useState<string[]>([]);
   const [selectedBreeds, setSelectedBreeds] = useState<string[]>([]);
@@ -55,7 +55,7 @@ const Search = () => {
     getBreeds();
   }, []);
 
-  const searchDogs = async () => {
+  const searchDogs = useCallback(async () => {
     // setFrom(page * parseInt(size));
     setLoading(true);
     try {
@@ -98,7 +98,8 @@ const Search = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedBreeds, zipCodes, ageMin, ageMax, from, size, sort]);
+
   useEffect(() => {
     const handleClickOutside = async (event: MouseEvent) => {
       if (
@@ -115,7 +116,7 @@ const Search = () => {
 
   useEffect(() => {
     searchDogs();
-  }, [from, size, sort]);
+  }, [from, size, sort, searchDogs]);
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [from]);
@@ -326,12 +327,12 @@ const Search = () => {
                 e.stopPropagation();
                 toggleFavorite(dog.id);
               }}
-              className="absolute top-2 right-2 bg-white border border-yellow-500 rounded-full p-2 cursor-pointer transition-all duration-300"
+              className="absolute top-2 right-2 bg-white border border-yellow-500 rounded-full p-2 cursor-pointer transition-all duration-300 z-10"
             >
               {favorites.includes(dog.id) ? (
-                <Heart className="text-red-500 fill-current " />
+                <Heart className="text-red-500 fill-current z-5" />
               ) : (
-                <Heart className="text-yellow-500 fill-current " />
+                <Heart className="text-yellow-500 fill-current z-5" />
               )}
             </button>
             <DogInfoCard dog={dog} />
