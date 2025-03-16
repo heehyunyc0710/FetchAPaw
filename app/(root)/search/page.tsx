@@ -91,14 +91,14 @@ const Search = () => {
           dogIds: searchResponse.resultIds,
         });
 
-        setDogs(dogsResponse);
+        setDogs((prevDogs: Dog[]) => [...prevDogs, ...dogsResponse]);
       }
     } catch (error) {
       console.error("Error searching dogs:", error);
     } finally {
       setLoading(false);
     }
-  }, [selectedBreeds, zipCodes, ageMin, ageMax, from, size, sort]);
+  }, [selectedBreeds, zipCodes, ageMin, ageMax, from, size, sort, setDogs]);
 
   useEffect(() => {
     const handleClickOutside = async (event: MouseEvent) => {
@@ -313,12 +313,12 @@ const Search = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.5 }}
       >
-        {dogs.map((dog) => (
+        {dogs.map((dog, index) => (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.5 }}
-            key={dog.id}
+            key={index}
             onClick={() => handleViewDog(dog.id)}
             className="dog-card relative bg-white/70 p-4 rounded-lg border border-transparent hover:border-yellow-300 transition-all duration-300 cursor-pointer"
           >
