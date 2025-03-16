@@ -183,9 +183,10 @@ const Search = () => {
   const handleViewDog = async (dogId: string) => {
     router.push(`/dogs/${dogId}`);
   };
+  
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 h-[fit-content]">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -238,6 +239,7 @@ const Search = () => {
                 value={ageMax}
                 min={0}
                 max={30}
+                
                 onChange={(e) => setAgeMax(e.target.value)}
                 placeholder="Max age"
                 className="w-full p-2 border rounded h-[40px] border-yellow-300 bg-white/70 text-sm "
@@ -322,7 +324,7 @@ const Search = () => {
       </motion.div>
 
       {/* Dog results grid */}
-    <div className="w-full h-[50vh]">
+    <div className="w-full h-[50vh] min-h-[fit-content]">
     {loading ? (
         <div className="text-center w-full  flex justify-center items-center fixed top-[60%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
           <Bone className="text-yellow-500  fill-current z-5 animate-pulse mr-2" /> 
@@ -368,7 +370,6 @@ const Search = () => {
         )}
       </motion.div>
     )}
-    </div>
       {!loading && searchResults && searchResults.total > 0 && (
         <div className="flex gap-4 items-center w-full justify-center mb-10">
           <button
@@ -393,6 +394,7 @@ const Search = () => {
           </button>
         </div>
       )}
+    </div>
 
       {!loading && matchResult && (
         <MatchDialog dog={matchResult} onClose={() => setMatchResult(null)} />
