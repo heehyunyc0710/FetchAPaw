@@ -5,6 +5,7 @@ import { Gilda_Display, Poppins } from "next/font/google";
 import "./globals.css";
 import { AuthContextProvider } from "@/contexts/AuthContext";
 import { DogContextProvider } from "@/contexts/DogContext";
+import { Toaster } from "sonner";
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
@@ -50,6 +51,7 @@ export default function RootLayout({
           className={`bg-main ${poppins.variable} ${gildaDisplay.variable}`}
         >
           <body className={`${poppins.className} px-10`}>
+          <Toaster />
             <Navbar />
             {children}
             <Footer />

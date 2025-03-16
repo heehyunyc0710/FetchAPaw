@@ -10,6 +10,7 @@ import AboutModal from "./modals/AboutModal";
 import { AboutButton } from "./modals/AboutButton";
 import ContactModal from "./modals/ContactModal";
 import { useRouter, usePathname } from "next/navigation";
+import { toast } from "sonner";
 const Navbar: React.FC = () => {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [aboutModalOpen, setAboutModalOpen] = useState(false);
@@ -17,6 +18,16 @@ const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
   const router = useRouter();
   const currentPath = usePathname();
+  const handleLogout = async () => {
+    await logout();
+    toast("Logout successful", {
+      description: "See you next time!",
+      action: {
+        label: "Dismiss",
+        onClick: () => console.log("Undo"),
+      },
+    })
+  };
 
   return (
     <motion.header
@@ -68,7 +79,7 @@ const Navbar: React.FC = () => {
             <p className="mr-4 text-md">Welcome, {user.name}</p>
             <button
               className=" cursor-pointer bg-yellow-500 text-zinc-700 rounded-full px-4 py-2"
-              onClick={logout}
+              onClick={handleLogout}
             >
               Log Out
             </button>

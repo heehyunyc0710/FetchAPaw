@@ -15,7 +15,12 @@ import { Bone, Heart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useDebounce } from "@/utils/hooks/useDebounce";
-import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "@/components/ui/select";
 
 const Search = () => {
   const [breeds, setBreeds] = useState<string[]>([]);
@@ -184,14 +189,14 @@ const Search = () => {
   const handleViewDog = async (dogId: string) => {
     router.push(`/dogs/${dogId}`);
   };
-  
 
   return (
-    <div className="container mx-auto p-4 h-[fit-content]">
+    <div className="container mx-auto p-4 h-[fit-content] overflow-y-auto">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
+       
       >
         <div className="flex justify-center items-center w-full my-10">
           <h1 className="text-3xl font-bold mb-6">Find Your Perfect Dog</h1>
@@ -240,7 +245,6 @@ const Search = () => {
                 value={ageMax}
                 min={0}
                 max={30}
-                
                 onChange={(e) => setAgeMax(e.target.value)}
                 placeholder="Max age"
                 className="focus:outline-none focus:border-2 w-full p-2 border rounded h-[40px] border-zinc-600 shadow-md bg-white/70 text-sm "
@@ -249,46 +253,70 @@ const Search = () => {
           </div>
 
           {/* Results size */}
-          <div >
+          <div>
             <h2 className="font-semibold mb-2">Results per page</h2>
-            
-            <Select
-              value={size}
-              onValueChange={(value) => setSize(value)}
-            >
-              <SelectTrigger   className="w-full p-2 border rounded h-[40px] border-zinc-600 shadow-md bg-white/70 text-sm cursor-pointer"
-            >
+
+            <Select value={size} onValueChange={(value) => setSize(value)}>
+              <SelectTrigger className="w-full p-2 border rounded h-[40px] border-zinc-600 shadow-md bg-white/70 text-sm cursor-pointer">
                 <p className="text-sm ">{size}</p>
               </SelectTrigger>
               <SelectContent className="bg-white border-zinc-600">
-                <SelectItem className="cursor-pointer hover:bg-yellow-200" value="10">10</SelectItem>
-                <SelectItem className="cursor-pointer hover:bg-yellow-200" value="25">25</SelectItem>
-                <SelectItem className="cursor-pointer hover:bg-yellow-200" value="50">50</SelectItem>
-                <SelectItem className="cursor-pointer hover:bg-yellow-200" value="100">100</SelectItem>
+                <SelectItem
+                  className="cursor-pointer hover:bg-yellow-200"
+                  value="10"
+                >
+                  10
+                </SelectItem>
+                <SelectItem
+                  className="cursor-pointer hover:bg-yellow-200"
+                  value="25"
+                >
+                  25
+                </SelectItem>
+                <SelectItem
+                  className="cursor-pointer hover:bg-yellow-200"
+                  value="50"
+                >
+                  50
+                </SelectItem>
+                <SelectItem
+                  className="cursor-pointer hover:bg-yellow-200"
+                  value="100"
+                >
+                  100
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
 
-        <button
-          onClick={() => {
-            setSelectedBreeds([]);
-            setZipCodes("");
-            setAgeMin("");
-            setAgeMax("");
-            setSize("25");
-            searchDogs();
-          }}
-          className="bg-black/80 text-white px-4 py-2 rounded mb-8 cursor-pointer  hover:shadow-lg "
-          disabled={loading}
-        >
-          Clear Filters
-        </button>
+        {(selectedBreeds.length > 0 ||
+          zipCodes ||
+          ageMin ||ageMax ) 
+          && (
+            <button
+              onClick={() => {
+                setSelectedBreeds([]);
+                setZipCodes("");
+                setAgeMin("");
+                setAgeMax("");
+                setSize("25");
+                searchDogs();
+              }}
+              className="bg-black/80 text-white px-4 py-2 rounded mb-8 cursor-pointer  hover:shadow-lg "
+              disabled={loading}
+            >
+              Clear Filters
+            </button>
+          )}
         {/* Pagination */}
         {searchResults && (
           <div className="flex gap-4 mb-6 items-center justify-between w-full">
             <div>
-              <button
+              
+              {favorites?.length > 0 && (
+                <>
+                <button
                 onClick={generateMatch}
                 disabled={favorites.length === 0}
                 className={` bg-orange-600 text-white px-4 py-2 rounded disabled:opacity-50 hover:shadow-lg  ${
@@ -297,37 +325,64 @@ const Search = () => {
                     : "cursor-pointer"
                 }`}
               >
-                View Match 
+                View Match
               </button>
-            {  favorites?.length > 0 && <button
-                onClick={() => setFavorites([])}
-                disabled={favorites.length === 0}
-                className={`ml-4 bg-white/70 border border-orange-600 text-orange-600 px-4 py-2 rounded disabled:opacity-50 hover:shadow-lg  ${
-                  favorites.length === 0
-                    ? "opacity-50 cursor-not-allowed"
-                    : "cursor-pointer"
-                }`}
-              >
-                Clear Favorites
-              </button>}
+                <button
+                  onClick={() => setFavorites([])}
+                  disabled={favorites.length === 0}
+                  className={`ml-4 bg-white/70 border border-orange-600 text-orange-600 px-4 py-2 rounded disabled:opacity-50 hover:shadow-lg  ${
+                    favorites.length === 0
+                      ? "opacity-50 cursor-not-allowed"
+                      : "cursor-pointer"
+                  }`}
+                >
+                  Clear Favorites
+                </button>
+                </>
+              )}
             </div>
             <div className="flex gap-2 items-center">
-             
-              <Select
-                value={sort}
-                onValueChange={(value) => setSort(value)}
-                
-              >
+              <Select value={sort} onValueChange={(value) => setSort(value)}>
                 <SelectTrigger className="bg-white border-zinc-600 rounded h-[40px] px-2 cursor-pointer">
-                <p className="text-sm ">Sort by</p>
+                  <p className="text-sm ">Sort by</p>
                 </SelectTrigger>
                 <SelectContent className="bg-white border-zinc-600">
-                <SelectItem className="cursor-pointer hover:bg-yellow-200" value="breed:asc">Breed (A-Z)</SelectItem>
-                <SelectItem className="cursor-pointer hover:bg-yellow-200" value="breed:desc">Breed (Z-A)</SelectItem>
-                <SelectItem className="cursor-pointer hover:bg-yellow-200" value="age:asc">Age (Youngest first)</SelectItem>
-                <SelectItem className="cursor-pointer hover:bg-yellow-200" value="age:desc">Age (Oldest first)</SelectItem>
-                <SelectItem className="cursor-pointer hover:bg-yellow-200" value="name:asc">Name (A-Z)</SelectItem>
-                <SelectItem className="cursor-pointer hover:bg-yellow-200" value="name:desc">Name (Z-A)</SelectItem>
+                  <SelectItem
+                    className="cursor-pointer hover:bg-yellow-200"
+                    value="breed:asc"
+                  >
+                    Breed (A-Z)
+                  </SelectItem>
+                  <SelectItem
+                    className="cursor-pointer hover:bg-yellow-200"
+                    value="breed:desc"
+                  >
+                    Breed (Z-A)
+                  </SelectItem>
+                  <SelectItem
+                    className="cursor-pointer hover:bg-yellow-200"
+                    value="age:asc"
+                  >
+                    Age (Youngest first)
+                  </SelectItem>
+                  <SelectItem
+                    className="cursor-pointer hover:bg-yellow-200"
+                    value="age:desc"
+                  >
+                    Age (Oldest first)
+                  </SelectItem>
+                  <SelectItem
+                    className="cursor-pointer hover:bg-yellow-200"
+                    value="name:asc"
+                  >
+                    Name (A-Z)
+                  </SelectItem>
+                  <SelectItem
+                    className="cursor-pointer hover:bg-yellow-200"
+                    value="name:desc"
+                  >
+                    Name (Z-A)
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -336,75 +391,79 @@ const Search = () => {
       </motion.div>
 
       {/* Dog results grid */}
-    <div className="w-full h-[50vh] min-h-[fit-content]">
-    {loading ? (
-        <div className="text-center w-full  flex justify-center items-center fixed top-[60%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
-          <Bone className="text-yellow-500  fill-current z-5 animate-pulse mr-2" /> 
-          <p className="text-md">Loading...</p>
-        </div>
-      ) : (
-        <motion.div
-        
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.5 }}
-        >
-          {!dogs.length ? (
-            <p className="text-center py-8">No dogs found</p>
-          ) : (
-            <div  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 min-h-[500px]">
-            {dogs.map((dog, index) => (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.5 }}
-                key={index}
-                onClick={() => handleViewDog(dog.id)}
-                className="dog-card relative bg-white/70 p-4 rounded-lg border border-transparent hover:shadow-lg transition-all duration-300 cursor-pointer"
-              >
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleFavorite(dog.id);
-                  }}
-                  className="absolute top-2 right-2 bg-white border border-yellow-500 rounded-full p-2 cursor-pointer transition-all duration-300 z-10   "
-                >
-                 
-                    <Heart className={`hover:text-red-500 fill-current z-5 ${favorites.includes(dog.id) ? "text-red-500 fill-current z-5" : "text-yellow-500 fill-current z-5"}`} />
-               
-                </button>
-                <DogInfoCard dog={dog} />
-              </motion.div>
-            ))}
+      <div className="w-full h-[50vh] min-h-[fit-content]">
+        {loading ? (
+          <div className="text-center w-full  flex justify-center items-center fixed top-[60%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
+            <Bone className="text-yellow-500  fill-current z-5 animate-pulse mr-2" />
+            <p className="text-md">Loading...</p>
+          </div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
+          >
+            {!dogs.length ? (
+              <p className="text-center py-8">No dogs found</p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 min-h-[500px]">
+                {dogs.map((dog, index) => (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.5 }}
+                    key={index}
+                    onClick={() => handleViewDog(dog.id)}
+                    className="dog-card relative bg-white p-6 rounded-lg border border-transparent hover:shadow-lg transition-all duration-300 cursor-pointer"
+                  >
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleFavorite(dog.id);
+                      }}
+                      className="absolute top-2 right-2 bg-white border border-yellow-500 rounded-full p-2 cursor-pointer transition-all duration-300 z-10   "
+                    >
+                      <Heart
+                        className={`hover:text-red-500 fill-current z-5 ${
+                          favorites.includes(dog.id)
+                            ? "text-red-500 fill-current z-5"
+                            : "text-yellow-500 fill-current z-5"
+                        }`}
+                      />
+                    </button>
+                    <DogInfoCard dog={dog} />
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </motion.div>
+        )}
+        {!loading && searchResults && searchResults.total > 0 && (
+          <div className="flex gap-4 items-center w-full justify-center my-10">
+            <button
+              onClick={() => handlePagination("prev")}
+              disabled={!searchResults.prev}
+              className="bg-yellow-500 text-zinc-700 px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
+            >
+              Previous
+            </button>
+
+            <span>
+              {from + 1} -{" "}
+              {Math.min(from + parseInt(size), searchResults.total)} of{" "}
+              {searchResults.total}
+            </span>
+
+            <button
+              onClick={() => handlePagination("next")}
+              disabled={!searchResults.next}
+              className="bg-yellow-500 text-zinc-700 px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
+            >
+              Next
+            </button>
           </div>
         )}
-      </motion.div>
-    )}
-      {!loading && searchResults && searchResults.total > 0 && (
-        <div className="flex gap-4 items-center w-full justify-center mb-10">
-          <button
-            onClick={() => handlePagination("prev")}
-            disabled={!searchResults.prev}
-            className="bg-yellow-500 text-zinc-700 px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
-          >
-            Previous
-          </button>
-
-          <span>
-            {from + 1} - {Math.min(from + parseInt(size), searchResults.total)}{" "}
-            of {searchResults.total}
-          </span>
-
-          <button
-            onClick={() => handlePagination("next")}
-            disabled={!searchResults.next}
-            className="bg-yellow-500 text-zinc-700 px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
-          >
-            Next
-          </button>
-        </div>
-      )}
-    </div>
+      </div>
 
       {!loading && matchResult && (
         <MatchDialog dog={matchResult} onClose={() => setMatchResult(null)} />
