@@ -1,10 +1,10 @@
 "use client";
-import { Dog } from "@/types";
+import { IDog } from "@/types";
 import { createContext, useContext, useState } from "react";
 
 interface DogSearchContextProps {
-  dogs: Dog[];
-  setDogs: React.Dispatch<React.SetStateAction<Dog[]>>;
+  dogs: IDog[];
+  setDogs: React.Dispatch<React.SetStateAction<IDog[]>>;
 
   favorites: string[];
   setFavorites: React.Dispatch<React.SetStateAction<string[]>>;
@@ -19,7 +19,7 @@ export const DogContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [dogs, setDogs] = useState<Dog[]>([]);
+  const [dogs, setDogs] = useState<IDog[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
 
   return (

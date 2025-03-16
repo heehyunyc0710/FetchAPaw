@@ -1,11 +1,11 @@
 import { Dialog } from "@/components/ui/dialog";
-import { Dog } from "@/types";
+import { IDog } from "@/types";
 import DogInfoCard from "./DogInfoCard";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface MatchDialogProps {
-  dog: Dog;
+  dog: IDog;
   onClose: () => void;
 }
 

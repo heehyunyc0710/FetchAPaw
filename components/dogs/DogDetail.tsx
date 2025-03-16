@@ -1,10 +1,10 @@
-import { Dog, ILocation } from "@/types";
+import { IDog, ILocation } from "@/types";
 import { fetchDogLocation } from "@/utils/getData";
 import { CakeIcon, Dna, Dog as DogIcon, MapPin } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Map } from "../Map";
 import Image from "next/image";
-const DogDetail = ({ dog }: { dog: Dog }) => {
+const DogDetail = ({ dog }: { dog: IDog }) => {
   const [location, setLocation] = useState<ILocation | null>(null);
   useEffect(() => {
     const fetchLocation = async () => {

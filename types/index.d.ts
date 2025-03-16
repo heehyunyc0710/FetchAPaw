@@ -1,4 +1,4 @@
-export interface Dog {
+export interface IDog {
   id: string;
   img: string;
   name: string;
@@ -7,7 +7,7 @@ export interface Dog {
   breed: string;
 }
 
-export interface SearchResults {
+export interface ISearchResults {
   resultIds: string[];
   total: number;
   next?: string;
@@ -21,4 +21,10 @@ export interface ILocation {
   longitude: number;
   state: string;
   zip_code: string;
+}
+
+export interface IAuthContext {
+  user: { name: string; email: string } | null;
+  login: (username: string, email: string) => Promise<void>;
+  logout: () => Promise<void>;
 }
