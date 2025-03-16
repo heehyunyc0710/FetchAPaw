@@ -3,12 +3,12 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 import Loader from "@/components/Loader";
-import Image from "next/image";
-import Script from "next/script";
 import { LoginModal } from "@/components/modals/LoginModal";
 import { useAuth } from "@/contexts/AuthContext";
-import { useRouter } from "next/navigation";
 import { PawPrint } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import Script from "next/script";
 const LandingPage = () => {
   const [pageLoading, setPageLoading] = useState<boolean>(true);
   const [loginModalOpen, setLoginModalOpen] = useState<boolean>(false);
@@ -39,6 +39,13 @@ const LandingPage = () => {
           animate={{ opacity: pageLoading ? 0 : 1, y: pageLoading ? 20 : 0 }}
           transition={{ duration: 0.5 }}
         >
+          {!user && loginModalOpen && (
+            <LoginModal
+              loginModalOpen={loginModalOpen}
+              setLoginModalOpen={setLoginModalOpen}
+              isNav={true}
+            />
+          )}
           <div
             id="slogan"
             className=" flex flex-col gap-4 w-full h-[55%] justify-between items-start"
@@ -53,7 +60,7 @@ const LandingPage = () => {
             </div>
 
             <div className="flex items-center gap-2  font-bold color-primary hover:scale-105 transition-all duration-400">
-              {!user && (
+            {!user && (
                 <motion.p
                   animate={{
                     y: [0, -10, 0],
@@ -89,7 +96,7 @@ const LandingPage = () => {
               )}
             </div>
           </div>
-          
+
           <Image
             src="/images/dog.png"
             alt="landing-image"

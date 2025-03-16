@@ -6,7 +6,7 @@ export function AboutButton(
        
         className="p-0  px-4  rounded  transition-colors  cursor-pointer hover:font-semibold" {...props}
       >
-        About
+        About Us
       </button>
     );
   }

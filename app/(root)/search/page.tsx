@@ -2,19 +2,18 @@
 import BreedList from "@/components/dogs/BreedList";
 import DogInfoCard from "@/components/dogs/DogInfoCard";
 import { MatchDialog } from "@/components/dogs/MatchDialog";
-import { Dog, SearchResults } from "@/types";
-import axios from "axios";
-import { motion } from "framer-motion";
-import { Heart } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useDogSearch } from "@/contexts/DogContext";
+import { Dog, SearchResults } from "@/types";
 import {
   fetchDogBreeds,
   fetchDogMatch,
   fetchDogs,
   handleDogSearch,
 } from "@/utils/getData";
+import { motion } from "framer-motion";
+import { Heart } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 const Search = () => {
   const [breeds, setBreeds] = useState<string[]>([]);
   const [selectedBreeds, setSelectedBreeds] = useState<string[]>([]);
@@ -181,7 +180,7 @@ const Search = () => {
             handleSelectAll={handleSelectAll}
             selectOpen={selectOpen}
             setSelectOpen={setSelectOpen}
-            selectRef={selectRef}
+            selectRef={selectRef as React.RefObject<HTMLDivElement>}
           />
         </div>
 
@@ -314,11 +313,10 @@ const Search = () => {
         transition={{ delay: 0.5, duration: 0.5 }}
       >
         {dogs.map((dog) => (
-           <motion.div
-           initial={{ opacity: 0}}
-           animate={{ opacity: 1}}
-           transition={{ duration: 0.5, delay: 0.5 }}
-           
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
             key={dog.id}
             onClick={() => handleViewDog(dog.id)}
             className="dog-card relative bg-white/70 p-4 rounded-lg border border-transparent hover:border-yellow-300 transition-all duration-300 cursor-pointer"

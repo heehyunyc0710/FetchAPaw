@@ -3,6 +3,7 @@ import { fetchDogLocation } from "@/utils/getData";
 import { CakeIcon, Dna, Dog as DogIcon, MapPin } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Map } from "../Map";
+import Image from "next/image";
 const DogDetail = ({ dog }: { dog: Dog }) => {
   const [location, setLocation] = useState<ILocation | null>(null);
   useEffect(() => {
@@ -18,7 +19,7 @@ const DogDetail = ({ dog }: { dog: Dog }) => {
     <div className="flex  items-center justify-between h-[80vh] w-screen md:px-20 px-6 gap-10">
       <div className="w-[fit-content]  md:max-w-[60%] max-w-[65%] h-[100%] overflow-hidden rounded-lg flex items-center justify-center">
         {dog && dog.img && (
-          <img src={dog.img} alt={dog.name} width={1000} height={1000} />
+          <Image src={dog.img} alt={dog.name} width={1000} height={1000} />
         )}
       </div>
       {dog && (
