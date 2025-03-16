@@ -9,11 +9,7 @@ import {
 import axios from "axios";
 
 import { useRouter } from "next/navigation";
-interface IAuthContext {
-  user: { name: string; email: string } | null;
-  login: (username: string, email: string) => Promise<void>;
-  logout: () => Promise<void>;
-}
+import { IAuthContext } from "@/types";
 
 const AuthContext = createContext<IAuthContext | undefined>(undefined);
 

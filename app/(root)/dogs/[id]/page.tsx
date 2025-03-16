@@ -2,7 +2,7 @@
 import DogDetail from "@/components/dogs/DogDetail";
 import Loader from "@/components/Loader";
 import { useDogSearch } from "@/contexts/DogContext";
-import { Dog } from "@/types";
+import { IDog } from "@/types";
 import { fetchDogs } from "@/utils/getData";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 const DogDetailPage = () => {
   const params = useParams();
   const dogId = params.id as string;
-  const [dog, setDog] = useState<Dog | null>(null);
+  const [dog, setDog] = useState<IDog | null>(null);
   const [loading, setLoading] = useState(true);
   const { dogs } = useDogSearch();
 

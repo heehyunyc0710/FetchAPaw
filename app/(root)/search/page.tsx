@@ -1,20 +1,20 @@
 "use client";
-import BreedList from "@/components/dogs/BreedList";
-import DogInfoCard from "@/components/dogs/DogInfoCard";
+import FilterBar from "@/components/dogs/FilterBar";
 import { MatchDialog } from "@/components/dogs/MatchDialog";
+import SearchResult from "@/components/dogs/SearchResult";
+import SortBy from "@/components/dogs/SortBy";
 import { useDogSearch } from "@/contexts/DogContext";
-import { Dog, SearchResults } from "@/types";
+import { IDog, ISearchResults } from "@/types";
 import {
   fetchDogBreeds,
   fetchDogMatch,
   fetchDogs,
   handleDogSearch,
 } from "@/utils/getData";
-import { motion } from "framer-motion";
-import { Bone, Heart } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState, useCallback } from "react";
 import { useDebounce } from "@/utils/hooks/useDebounce";
+import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const Search = () => {
   const [breeds, setBreeds] = useState<string[]>([]);
@@ -25,13 +25,13 @@ const Search = () => {
   const [size, setSize] = useState<string>("25");
   const [selectOpen, setSelectOpen] = useState<boolean>(false);
   const selectRef = useRef<HTMLDivElement>(null);
-  const [searchResults, setSearchResults] = useState<SearchResults | null>(
+  const [searchResults, setSearchResults] = useState<ISearchResults | null>(
     null
   );
   const [loading, setLoading] = useState<boolean>(false);
   const [sort, setSort] = useState<string>("breed:asc");
 
-  const [matchResult, setMatchResult] = useState<Dog | null>(null);
+  const [matchResult, setMatchResult] = useState<IDog | null>(null);
   const router = useRouter();
   const [from, setFrom] = useState<number>(0);
   const { dogs, setDogs } = useDogSearch();
@@ -43,13 +43,6 @@ const Search = () => {
   const debouncedAgeMin = useDebounce(ageMin, 1000);
   const debouncedAgeMax = useDebounce(ageMax, 1000);
 
-  const handleSelectAll = (checked: boolean) => {
-    if (checked) {
-      setSelectedBreeds(breeds);
-    } else {
-      setSelectedBreeds([]);
-    }
-  };
   useEffect(() => {
     const getBreeds = async () => {
       try {
@@ -185,7 +178,7 @@ const Search = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 h-[fit-content] overflow-y-auto">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -194,205 +187,89 @@ const Search = () => {
         <div className="flex justify-center items-center w-full my-10">
           <h1 className="text-3xl font-bold mb-6">Find Your Perfect Dog</h1>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          {/* Breed filter */}
-          <div>
-            <h2 className="font-semibold mb-2">Breeds</h2>
-            <BreedList
-              breeds={breeds}
-              selectedBreeds={selectedBreeds}
-              setSelectedBreeds={setSelectedBreeds}
-              handleSelectAll={handleSelectAll}
-              selectOpen={selectOpen}
-              setSelectOpen={setSelectOpen}
-              selectRef={selectRef as React.RefObject<HTMLDivElement>}
-            />
-          </div>
+        {/* filter bar */}
+        <FilterBar
+          breeds={breeds}
+          selectedBreeds={selectedBreeds}
+          setSelectedBreeds={setSelectedBreeds}
+          selectOpen={selectOpen}
+          setSelectOpen={setSelectOpen}
+          selectRef={selectRef as React.RefObject<HTMLDivElement>}
+          zipCodes={zipCodes}
+          setZipCodes={setZipCodes}
+          ageMin={ageMin}
+          setAgeMin={setAgeMin}
+          ageMax={ageMax}
+          setAgeMax={setAgeMax}
+          size={size}
+          setSize={setSize}
+        />
 
-          {/* Zip codes filter */}
-          <div>
-            <h2 className="font-semibold mb-2">Zip Codes</h2>
-            <input
-              type="text"
-              value={zipCodes}
-              onChange={(e) => setZipCodes(e.target.value)}
-              placeholder="Comma-separated zip codes"
-              className="w-full p-2 border rounded h-[40px] border-yellow-300 bg-white/70 text-sm "
-            />
-          </div>
-
-          {/* Age range filters */}
-          <div>
-            <h2 className="font-semibold mb-2">Age Range</h2>
-            <div className="flex gap-2">
-              <input
-                type="number"
-                value={ageMin}
-                min={0}
-                onChange={(e) => setAgeMin(e.target.value)}
-                placeholder="Min age"
-                className="w-full p-2 border rounded h-[40px] border-yellow-300 bg-white/70 text-sm "
-              />
-              <input
-                type="number"
-                value={ageMax}
-                min={0}
-                max={30}
-                onChange={(e) => setAgeMax(e.target.value)}
-                placeholder="Max age"
-                className="w-full p-2 border rounded h-[40px] border-yellow-300 bg-white/70 text-sm "
-              />
-            </div>
-          </div>
-
-          {/* Results size */}
-          <div>
-            <h2 className="font-semibold mb-2">Results per page</h2>
-            <select
-              value={size}
-              onChange={(e) => setSize(e.target.value)}
-              className="w-full p-2 border rounded h-[40px] border-yellow-300 bg-white/70 text-sm cursor-pointer"
-            >
-              <option value="10">10</option>
-              <option value="25">25</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-            </select>
-          </div>
-        </div>
-
-        <button
-          onClick={() => {
-            setSelectedBreeds([]);
-            setZipCodes("");
-            setAgeMin("");
-            setAgeMax("");
-            setSize("25");
-            searchDogs();
-          }}
-          className="bg-white/50 text-zinc-700 px-4 py-2 rounded mb-8 cursor-pointer border border-yellow-600 hover:text-black "
-          disabled={loading}
-        >
-          Clear Filters
-        </button>
-        {/* Pagination */}
+        {(selectedBreeds.length > 0 || zipCodes || ageMin || ageMax) && (
+          <button
+            onClick={() => {
+              setSelectedBreeds([]);
+              setZipCodes("");
+              setAgeMin("");
+              setAgeMax("");
+              setSize("25");
+              searchDogs();
+            }}
+            className="bg-black/80 text-white px-4 py-2 rounded mb-8 cursor-pointer  hover:shadow-lg "
+            disabled={loading}
+          >
+            Clear Filters
+          </button>
+        )}
+        {/* match and clear favorites */}
         {searchResults && (
           <div className="flex gap-4 mb-6 items-center justify-between w-full">
             <div>
-              <button
-                onClick={generateMatch}
-                disabled={favorites.length === 0}
-                className={` bg-orange-500 text-white px-4 py-2 rounded disabled:opacity-50  ${
-                  favorites.length === 0
-                    ? "opacity-50 cursor-not-allowed"
-                    : "cursor-pointer"
-                }`}
-              >
-                View Match ({favorites.length})
-              </button>
-              <button
-                onClick={() => setFavorites([])}
-                disabled={favorites.length === 0}
-                className={`ml-4 bg-orange-600 text-white px-4 py-2 rounded disabled:opacity-50  ${
-                  favorites.length === 0
-                    ? "opacity-50 cursor-not-allowed"
-                    : "cursor-pointer"
-                }`}
-              >
-                Clear Favorites
-              </button>
+              {favorites?.length > 0 && (
+                <>
+                  <button
+                    onClick={generateMatch}
+                    disabled={favorites.length === 0}
+                    className={` bg-orange-600 text-white px-4 py-2 rounded disabled:opacity-50 hover:shadow-lg  ${
+                      favorites.length === 0
+                        ? "opacity-50 cursor-not-allowed"
+                        : "cursor-pointer"
+                    }`}
+                  >
+                    View Match
+                  </button>
+                  <button
+                    onClick={() => setFavorites([])}
+                    disabled={favorites.length === 0}
+                    className={`ml-4 bg-white/70 border border-orange-600 text-orange-600 px-4 py-2 rounded disabled:opacity-50 hover:shadow-lg  ${
+                      favorites.length === 0
+                        ? "opacity-50 cursor-not-allowed"
+                        : "cursor-pointer"
+                    }`}
+                  >
+                    Clear Favorites
+                  </button>
+                </>
+              )}
             </div>
-            <div className="flex gap-2 items-center">
-              <p className="text-sm ">Sort by</p>
-              <select
-                value={sort}
-                onChange={(e) => setSort(e.target.value)}
-                className="bg-white border-yellow-300 rounded h-[40px] px-2 cursor-pointer"
-              >
-                <option value="breed:asc">Breed (A-Z)</option>
-                <option value="breed:desc">Breed (Z-A)</option>
-                <option value="age:asc">Age (Youngest first)</option>
-                <option value="age:desc">Age (Oldest first)</option>
-                <option value="name:asc">Name (A-Z)</option>
-                <option value="name:desc">Name (Z-A)</option>
-              </select>
-            </div>
+            {/* sort by */}
+            <SortBy sort={sort} setSort={setSort} />
           </div>
         )}
       </motion.div>
 
       {/* Dog results grid */}
-    <div className="w-full h-[50vh]">
-    {loading ? (
-        <div className="text-center w-full  flex justify-center items-center fixed top-[60%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
-          <Bone className="text-yellow-500  fill-current z-5 animate-pulse mr-2" /> 
-          <p className="text-md">Loading...</p>
-        </div>
-      ) : (
-        <motion.div
-        
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.5 }}
-        >
-          {!dogs.length ? (
-            <p className="text-center py-8">No dogs found</p>
-          ) : (
-            <div  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 min-h-[500px]">
-            {dogs.map((dog, index) => (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.5 }}
-                key={index}
-                onClick={() => handleViewDog(dog.id)}
-                className="dog-card relative bg-white/70 p-4 rounded-lg border border-transparent hover:border-yellow-300 transition-all duration-300 cursor-pointer"
-              >
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleFavorite(dog.id);
-                  }}
-                  className="absolute top-2 right-2 bg-white border border-yellow-500 rounded-full p-2 cursor-pointer transition-all duration-300 z-10"
-                >
-                  {favorites.includes(dog.id) ? (
-                    <Heart className="text-red-500 fill-current z-5" />
-                  ) : (
-                    <Heart className="text-yellow-500 fill-current z-5" />
-                  )}
-                </button>
-                <DogInfoCard dog={dog} />
-              </motion.div>
-            ))}
-          </div>
-        )}
-      </motion.div>
-    )}
-    </div>
-      {!loading && searchResults && searchResults.total > 0 && (
-        <div className="flex gap-4 items-center w-full justify-center mb-10">
-          <button
-            onClick={() => handlePagination("prev")}
-            disabled={!searchResults.prev}
-            className="bg-yellow-500 text-zinc-700 px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
-          >
-            Previous
-          </button>
-
-          <span>
-            {from + 1} - {Math.min(from + parseInt(size), searchResults.total)}{" "}
-            of {searchResults.total}
-          </span>
-
-          <button
-            onClick={() => handlePagination("next")}
-            disabled={!searchResults.next}
-            className="bg-yellow-500 text-zinc-700 px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
-          >
-            Next
-          </button>
-        </div>
-      )}
+      <SearchResult
+        loading={loading}
+        dogs={dogs}
+        favorites={favorites}
+        toggleFavorite={toggleFavorite}
+        handleViewDog={handleViewDog}
+        handlePagination={handlePagination}
+        searchResults={searchResults as ISearchResults}
+        from={from}
+        size={size}
+      />
 
       {!loading && matchResult && (
         <MatchDialog dog={matchResult} onClose={() => setMatchResult(null)} />

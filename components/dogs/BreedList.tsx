@@ -43,7 +43,7 @@ const BreedList: React.FC<BreedListProps> = ({
           e.stopPropagation();
           setSelectOpen(!selectOpen);
         }}
-        className="w-full h-[40px] border-yellow-300 bg-white/70 cursor-pointer"
+        className="w-full h-[40px]  border-zinc-600 shadow-md bg-white/70 cursor-pointer"
       >
         <SelectValue placeholder="Select Breeds">
           {selectedBreeds.length > 0
@@ -72,7 +72,7 @@ const BreedList: React.FC<BreedListProps> = ({
             className={`cursor-pointer ${
               selectedBreeds.includes(breed)
                 ? "bg-yellow-100 text-yellow-700 font-medium"
-                : "hover:bg-yellow-100"
+                : "hover:bg-yellow-200"
             }`}
           >
             {breed}
