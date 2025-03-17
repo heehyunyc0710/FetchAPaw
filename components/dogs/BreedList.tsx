@@ -78,36 +78,37 @@ const BreedList: React.FC<IBreedListProps> = ({
                   Select All
                 </div>
               </CommandItem>
-              {breeds.map((breed) => (
-                <CommandItem
-                  className={`hover:bg-yellow-200 cursor-pointer ${
-                    selectedBreeds.includes(breed) ? "bg-yellow-300" : ""
-                  }`}
-                  key={breed}
-                  value={breed}
-                  onSelect={() => {
-                    if (selectedBreeds.includes(breed)) {
-                      setSelectedBreeds(
-                        selectedBreeds.filter((b) => b !== breed)
-                      );
-                    } else {
-                      setSelectedBreeds([...selectedBreeds, breed]);
-                    }
-                  }}
-                >
-                  <div className="flex items-center">
-                    <Check
-                      className={cn(
-                        "mr-2",
-                        selectedBreeds.includes(breed)
-                          ? "opacity-100"
-                          : "opacity-0"
-                      )}
-                    />
-                    {breed}
-                  </div>
-                </CommandItem>
-              ))}
+              {breeds.length > 0 &&
+                breeds.map((breed) => (
+                  <CommandItem
+                    className={`hover:bg-yellow-200 cursor-pointer ${
+                      selectedBreeds.includes(breed) ? "bg-yellow-300" : ""
+                    }`}
+                    key={breed}
+                    value={breed}
+                    onSelect={() => {
+                      if (selectedBreeds.includes(breed)) {
+                        setSelectedBreeds(
+                          selectedBreeds.filter((b) => b !== breed)
+                        );
+                      } else {
+                        setSelectedBreeds([...selectedBreeds, breed]);
+                      }
+                    }}
+                  >
+                    <div className="flex items-center">
+                      <Check
+                        className={cn(
+                          "mr-2",
+                          selectedBreeds.includes(breed)
+                            ? "opacity-100"
+                            : "opacity-0"
+                        )}
+                      />
+                      {breed}
+                    </div>
+                  </CommandItem>
+                ))}
             </CommandGroup>
           </CommandList>
         </Command>
