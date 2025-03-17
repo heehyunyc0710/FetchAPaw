@@ -6,7 +6,9 @@ import Image from "next/image";
 import { useState } from "react";
 
 const DogInfoCard = ({ dog }: { dog: IDog }) => {
+
   const [location, setLocation] = useState<ILocation | null>(null);
+  
   useEffect(() => {
     const fetchLocation = async () => {
       const response = await fetchDogLocation([dog.zip_code]);
@@ -15,6 +17,7 @@ const DogInfoCard = ({ dog }: { dog: IDog }) => {
     };
     fetchLocation();
   }, [dog]);
+  
   return (
     <div>
       <div className="relative w-full h-48 z-0">

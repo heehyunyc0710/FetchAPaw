@@ -1,6 +1,4 @@
-import { IDog } from "@/types";
-import React from "react";
-
+import { ISearchResultHeaderProps } from "@/types";
 const SearchResultHeader = ({
   city,
   state,
@@ -9,15 +7,7 @@ const SearchResultHeader = ({
   ageMax,
   zipCodes,
   dogs,
-}: {
-  city: string;
-  state: string;
-  selectedBreeds: string[];
-  ageMin: string;
-  ageMax: string;
-  zipCodes: string;
-  dogs: IDog[];
-}) => {
+}: ISearchResultHeaderProps) => {
   return (
     <div className="flex justify-center items-center w-full my-10">
     {dogs.length &&  <h1 className="text-md font-bold mb-6 capitalize">

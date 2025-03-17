@@ -1,46 +1,24 @@
+import { ILocation, ILocationSearchParams } from "@/types";
+import { MapPin } from "lucide-react";
+import { useEffect, useState } from "react";
+import { searchLocations } from "../../utils/getData";
+import { Button } from "../ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
 import BreedList from "./BreedList";
-import { useState, useEffect } from "react";
-import { searchLocations } from "../../utils/getData";
-import { ILocation } from "@/types";
-import { ILocationSearchParams } from "@/types";
-import { useDebounce } from "@/utils/hooks/useDebounce";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Button } from "../ui/button";
-import { MapPin } from "lucide-react";
-interface IFilterBarProps {
-  breeds: string[];
-  selectedBreeds: string[];
-  setSelectedBreeds: (breeds: string[]) => void;
 
-  city: string;
-  setCity: (city: string) => void;
-  state: string;
-  setState: (state: string) => void;
-  // selectOpen: boolean;
-  // setSelectOpen: (open: boolean) => void;
-  // selectRef: React.RefObject<HTMLDivElement>;
-  zipCodes: string;
-  setZipCodes: (zipCodes: string) => void;
-  ageMin: string;
-  setAgeMin: (ageMin: string) => void;
-  ageMax: string;
-  setAgeMax: (ageMax: string) => void;
-  size: string;
-  setSize: (size: string) => void;
-}
+import { IFilterBarProps } from "@/types";
+
+const sizeOptions = [10, 25, 50, 100]; 
+
 const FilterBar = ({
   breeds,
   selectedBreeds,
   setSelectedBreeds,
-
   city,
   setCity,
   state,
   setState,
-  // selectOpen,
-  // setSelectOpen,
-  // selectRef,
   zipCodes,
   setZipCodes,
   ageMin,
@@ -50,40 +28,45 @@ const FilterBar = ({
   size,
   setSize,
 }: IFilterBarProps) => {
-  const debouncedCity = useDebounce(city, 1500);
-  const debouncedState = useDebounce(state, 1500);
+  
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const fetchLocations = async () => {
-      if (!debouncedCity && !debouncedState) return;
+    const fetchLocations = async (zipCodes: string) => {
+      if (!city && !state) return;
       setZipCodes("");
 
       try {
         const params: ILocationSearchParams = { size: Number(size) };
-        if (debouncedCity) params.city = debouncedCity;
-        if (debouncedState) params.states = [debouncedState];
+        if (city) params.city = city;
+        if (state) params.states = [state];
 
         const response = await searchLocations(params);
         console.log("response000", response);
 
         if (response.results.length > 0) {
-          const zipCodes = response.results
+          const zipCodesResponse = response.results
             .map((location: ILocation) => location.zip_code)
             .join(",");
-          console.log("zipCodes", zipCodes);
-          setZipCodes(zipCodes);
+          if(zipCodes){
+            setZipCodes(zipCodes);
+          }else{  
+            setZipCodes(zipCodesResponse);
+          }
+         
         }
       } catch (error) {
         console.error("Error fetching locations:", error);
       }
     };
 
-    if (!open) fetchLocations();
-  }, [debouncedCity, debouncedState, open]);
+    if (!open) fetchLocations(zipCodes);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [city, state, open]);
 
   useEffect(() => {
     if (!city && !state) setZipCodes("");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [city, state]);
 
   const handleSelectAll = (checked: boolean) => {
@@ -104,9 +87,6 @@ const FilterBar = ({
           selectedBreeds={selectedBreeds}
           setSelectedBreeds={setSelectedBreeds}
           handleSelectAll={handleSelectAll}
-          // selectOpen={selectOpen}
-          // setSelectOpen={setSelectOpen}
-          // selectRef={selectRef as React.RefObject<HTMLDivElement>}
         />
       </div>
 
@@ -115,12 +95,15 @@ const FilterBar = ({
         <h2 className="font-semibold mb-2">Location</h2>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
-            <Button variant="outline" className="w-full justify-start border-zinc-600 bg-white/70 h-10 shadow-lg">
+            <Button
+              variant="outline"
+              className="w-full justify-start border-zinc-600 bg-white/70 h-10 shadow-lg"
+            >
               <MapPin className="w-full" /> Filter by location
             </Button>
           </PopoverTrigger>
           <PopoverContent
-            className="min-w-full bg-white"
+            className="min-w-full bg-white "
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
@@ -128,13 +111,14 @@ const FilterBar = ({
               }
             }}
           >
-            <>
+            <div className="mb-2">
+           
               <input
                 type="text"
                 value={city}
                 onChange={(e) => {
                   setCity(e.target.value);
-                  setZipCodes("");
+                  // setZipCodes("");
                 }}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
@@ -149,7 +133,7 @@ const FilterBar = ({
                 value={state}
                 onChange={(e) => {
                   setState(e.target.value.toUpperCase());
-                  setZipCodes("");
+                  // setZipCodes("");
                 }}
                 placeholder="2-letter State"
                 className="focus:outline-none focus:border-2 w-full p-2 border-b rounded h-[40px] border-zinc-600 shadow-md bg-white/70 text-sm "
@@ -159,13 +143,21 @@ const FilterBar = ({
                 value={zipCodes}
                 onChange={(e) => {
                   setZipCodes(e.target.value);
-                  setCity("");
-                  setState("");
+                  // setCity("");
+                  // setState("");
                 }}
                 placeholder="Comma-separated zip codes"
                 className="focus:outline-none focus:border-2 w-full p-2 border-b rounded h-[40px] border-zinc-600 shadow-md bg-white/70 text-sm "
               />
-            </>
+              
+            </div>
+            <Button variant="outline" className="w-full justify-start border-zinc-600 bg-orange-100 h-10 shadow-lg  hover:bg-yellow-300 cursor-pointer" onClick={() => {
+              setCity("");
+              setState("");
+              setZipCodes("");
+            }}>
+              Clear Location
+            </Button>
           </PopoverContent>
         </Popover>
       </div>
@@ -200,33 +192,18 @@ const FilterBar = ({
 
         <Select value={size} onValueChange={(value) => setSize(value)}>
           <SelectTrigger className="w-full p-2 border rounded h-[40px] border-zinc-600 shadow-md bg-white/70 text-sm cursor-pointer">
-            <p className="text-sm ">{size}</p>
+            <p className="text-sm">{size}</p>
           </SelectTrigger>
           <SelectContent className="bg-white border-zinc-600">
-            <SelectItem
-              className="cursor-pointer hover:bg-yellow-200"
-              value="10"
-            >
-              10
-            </SelectItem>
-            <SelectItem
-              className="cursor-pointer hover:bg-yellow-200"
-              value="25"
-            >
-              25
-            </SelectItem>
-            <SelectItem
-              className="cursor-pointer hover:bg-yellow-200"
-              value="50"
-            >
-              50
-            </SelectItem>
-            <SelectItem
-              className="cursor-pointer hover:bg-yellow-200"
-              value="100"
-            >
-              100
-            </SelectItem>
+            {sizeOptions.map((option) => (
+              <SelectItem
+                key={option}
+                className="cursor-pointer hover:bg-yellow-200"
+                value={option.toString()}
+              >
+                {option}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>

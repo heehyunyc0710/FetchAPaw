@@ -18,15 +18,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useState } from "react";
+import { IBreedListProps } from "@/types";
 
-interface BreedListProps {
-  breeds: string[];
-  selectedBreeds: string[];
-  setSelectedBreeds: (breeds: string[]) => void;
-  handleSelectAll: (checked: boolean) => void;
-}
 
-const BreedList: React.FC<BreedListProps> = ({
+const BreedList: React.FC<IBreedListProps> = ({
   breeds,
   selectedBreeds,
   setSelectedBreeds,
@@ -64,9 +59,10 @@ const BreedList: React.FC<BreedListProps> = ({
           <CommandInput placeholder="Search breeds..." className="w-full" />
           <CommandList className="max-h-[300px] overflow-y-auto w-full">
             {/* <CommandEmpty>No breeds found.</CommandEmpty> */}
-            <CommandGroup className="w-full">
+            <CommandGroup className="w-full ">
               <CommandItem
                 value="select-all"
+                className="hover:bg-yellow-200 cursor-pointer"
                 onSelect={() => {
                   handleSelectAll(selectedBreeds.length !== breeds.length);
                 }}
@@ -85,6 +81,7 @@ const BreedList: React.FC<BreedListProps> = ({
               </CommandItem>
               {breeds.map((breed) => (
                 <CommandItem
+                  className={`hover:bg-yellow-200 cursor-pointer ${selectedBreeds.includes(breed) ? "bg-yellow-300" : ""}`}
                   key={breed}
                   value={breed}
                   onSelect={() => {

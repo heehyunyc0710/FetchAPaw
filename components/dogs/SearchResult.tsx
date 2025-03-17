@@ -3,7 +3,9 @@ import DogInfoCard from './DogInfoCard'
 import { Heart } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Bone } from 'lucide-react'
-import { IDog, ISearchResults } from '@/types'
+import { ISearchResultProps } from '@/types'
+
+
 const SearchResult = ({
   loading,
   dogs,
@@ -14,17 +16,7 @@ const SearchResult = ({
   searchResults,
   from,
   size,
-}: {
-  loading: boolean;
-  dogs: IDog[];
-  favorites: string[];
-  toggleFavorite: (dogId: string) => void;
-  handleViewDog: (dogId: string) => void;
-  handlePagination: (direction: 'prev' | 'next') => void;
-  searchResults: ISearchResults;
-  from: number;
-  size: string;
-}) => {
+}: ISearchResultProps) => {
   
   return (
     <div className="w-full h-[50vh] min-h-[fit-content]">

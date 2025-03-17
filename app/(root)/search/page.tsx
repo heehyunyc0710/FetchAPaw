@@ -1,4 +1,5 @@
 "use client";
+import FavoritesActions from "@/components/dogs/FavoritesActions";
 import FilterBar from "@/components/dogs/FilterBar";
 import { MatchDialog } from "@/components/dogs/MatchDialog";
 import SearchResult from "@/components/dogs/SearchResult";
@@ -25,8 +26,6 @@ const Search = () => {
   const [ageMin, setAgeMin] = useState<string>("");
   const [ageMax, setAgeMax] = useState<string>("");
   const [size, setSize] = useState<string>("25");
-  // const [selectOpen, setSelectOpen] = useState<boolean>(false);
-  // const selectRef = useRef<HTMLDivElement>(null);
   const [searchResults, setSearchResults] = useState<ISearchResults | null>(
     null
   );
@@ -51,6 +50,19 @@ const Search = () => {
     getBreeds();
   }, []);
 
+  // function toget dogs by ids and update the dogs state
+  const fetchDogsByIds = async (resultIds: string[]) => {
+    if (resultIds.length > 0) {
+      const dogsResponse = await fetchDogs({
+        dogIds: resultIds,
+      });
+      setDogs(dogsResponse);
+    } else {
+      setDogs([]);
+    }
+  };
+
+  // function to search dogs
   const searchDogs = async () => {
     console.log("zipcodes", zipCodes);
 
@@ -69,6 +81,7 @@ const Search = () => {
       }
 
       if (zipCodes) {
+        
         zipCodes.split(",").forEach((zip) => {
           params.append("zipCodes", zip.trim());
         });
@@ -81,46 +94,30 @@ const Search = () => {
       setSearchResults(searchResponse);
       console.log("searchResponse", searchResponse);
 
-      if (searchResponse.resultIds.length > 0) {
-        const dogsResponse = await fetchDogs({
-          dogIds: searchResponse.resultIds,
-        });
-
-        setDogs(dogsResponse);
-      } else {
-        setDogs([]);
-      }
+      fetchDogsByIds(searchResponse.resultIds);
     } catch (error) {
       console.error("Error searching dogs:", error);
     } finally {
       setLoading(false);
     }
   };
+  // load dogs when sort
+  useEffect(() => {
+    searchDogs();
+  }, [sort, from]);
 
+  // load dogs when page loads
   useEffect(() => {
     const fetchAllDogs = async () => {
       const params = new URLSearchParams();
-      params.set("sort", sort);
-      params.set("from", "0");
-      params.set("size", "25");
 
       const response = await handleDogSearch(params.toString());
       setSearchResults(response);
-      console.log("searchResponse", response);
 
-      if (response.resultIds.length > 0) {
-        const dogsResponse = await fetchDogs({
-          dogIds: response.resultIds,
-        });
-        console.log("dogsResponse", dogsResponse);
-
-        setDogs(dogsResponse);
-      } else {
-        setDogs([]);
-      }
+      fetchDogsByIds(response?.resultIds);
     };
     fetchAllDogs();
-  }, [sort, from, setDogs]);
+  }, []);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -179,9 +176,6 @@ const Search = () => {
           breeds={breeds}
           selectedBreeds={selectedBreeds}
           setSelectedBreeds={setSelectedBreeds}
-          // selectOpen={selectOpen}
-          // setSelectOpen={setSelectOpen}
-          // selectRef={selectRef as React.RefObject<HTMLDivElement>}
           zipCodes={zipCodes}
           setZipCodes={setZipCodes}
           city={city}
@@ -195,7 +189,7 @@ const Search = () => {
           size={size}
           setSize={setSize}
         />
-
+        {/* clear and search buttons */}
         <div className="flex gap-4 mb-6 items-center justify-start w-full">
           <button
             onClick={() => {
@@ -225,57 +219,17 @@ const Search = () => {
         {/* match and clear favorites */}
         {searchResults && (
           <div className="flex gap-4 mb-6 items-center justify-between w-full">
-            <div>
-              {favorites?.length > 0 && (
-                <>
-                  <button
-                    onClick={generateMatch}
-                    disabled={favorites.length === 0}
-                    className={` bg-orange-600 text-white px-4 py-2 rounded disabled:opacity-50 hover:shadow-lg  ${
-                      favorites.length === 0
-                        ? "opacity-50 cursor-not-allowed"
-                        : "cursor-pointer"
-                    }`}
-                  >
-                    View Match
-                  </button>
-                  <button
-                    onClick={() => setFavorites([])}
-                    disabled={favorites.length === 0}
-                    className={`ml-4 bg-white/70 border border-orange-600 text-orange-600 px-4 py-2 rounded disabled:opacity-50 hover:shadow-lg  ${
-                      favorites.length === 0
-                        ? "opacity-50 cursor-not-allowed"
-                        : "cursor-pointer"
-                    }`}
-                  >
-                    Clear Favorites
-                  </button>
-                </>
-              )}
-            </div>
+            <FavoritesActions
+              favorites={favorites}
+              generateMatch={generateMatch}
+              setFavorites={setFavorites}
+            />
             {/* sort by */}
             <SortBy sort={sort} setSort={setSort} />
           </div>
         )}
       </motion.div>
-      {/* {(!loading && selectedBreeds.length > 0) ||
-        city ||
-        state ||
-        ageMin ||
-        ageMax ||
-        (zipCodes && (
-          <div>
-            <SearchResultHeader
-              city={city}
-              state={state}
-              selectedBreeds={selectedBreeds}
-              ageMin={ageMin}
-              ageMax={ageMax}
-              zipCodes={zipCodes}
-              dogs={dogs}
-            />
-          </div>
-        ))} */}
+
       {/* Dog results grid */}
       <SearchResult
         loading={loading}

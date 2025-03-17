@@ -1,15 +1,11 @@
 import { Dialog } from "@/components/ui/dialog";
-import { IDog } from "@/types";
-import DogInfoCard from "./DogInfoCard";
+import { IMatchDialogProps } from "@/types";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import DogInfoCard from "./DogInfoCard";
 
-interface MatchDialogProps {
-  dog: IDog;
-  onClose: () => void;
-}
 
-export const MatchDialog = ({ dog, onClose }: MatchDialogProps) => {
+export const MatchDialog = ({ dog, onClose }: IMatchDialogProps) => {
   const router = useRouter();
   return (
     <Dialog open={true} onOpenChange={onClose}>
