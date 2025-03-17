@@ -115,7 +115,7 @@ const FilterBar = ({
         <h2 className="font-semibold mb-2">Location</h2>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
-            <Button className="w-full justify-start border-zinc-600 bg-white/70 h-10">
+            <Button variant="outline" className="w-full justify-start border-zinc-600 bg-white/70 h-10 shadow-lg">
               <MapPin className="w-full" /> Filter by location
             </Button>
           </PopoverTrigger>

@@ -41,7 +41,7 @@ const BreedList: React.FC<BreedListProps> = ({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full justify-between border-zinc-600 bg-white/70 h-10"
+          className="w-full justify-between border-zinc-600 bg-white/70 h-10 shadow-lg"
         >
           {selectedBreeds.length > 0
             ? `${selectedBreeds.length} breed${

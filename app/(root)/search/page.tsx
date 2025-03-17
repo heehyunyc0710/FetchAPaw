@@ -39,12 +39,6 @@ const Search = () => {
   const { dogs, setDogs } = useDogSearch();
   const { favorites, setFavorites } = useDogSearch();
 
-  // Debounce the search inputs
-  // const debouncedBreeds = useDebounce(selectedBreeds, 1000);
-  // const debouncedZipCodes = useDebounce(zipCodes, 1000);
-  // const debouncedAgeMin = useDebounce(ageMin, 1000);
-  // const debouncedAgeMax = useDebounce(ageMax, 1000);
-
   useEffect(() => {
     const getBreeds = async () => {
       try {
@@ -56,11 +50,10 @@ const Search = () => {
     };
     getBreeds();
   }, []);
-  
 
   const searchDogs = async () => {
     console.log("zipcodes", zipCodes);
- 
+
     setLoading(true);
     try {
       const params = new URLSearchParams();
@@ -74,7 +67,7 @@ const Search = () => {
           params.append("breeds", breed);
         });
       }
-     
+
       if (zipCodes) {
         zipCodes.split(",").forEach((zip) => {
           params.append("zipCodes", zip.trim());
@@ -106,7 +99,12 @@ const Search = () => {
 
   useEffect(() => {
     const fetchAllDogs = async () => {
-      const response = await handleDogSearch("sort=breed%3Aasc&from=0&size=25");
+      const params = new URLSearchParams();
+      params.set("sort", sort);
+      params.set("from", "0");
+      params.set("size", "25");
+
+      const response = await handleDogSearch(params.toString());
       setSearchResults(response);
       console.log("searchResponse", response);
 
@@ -122,7 +120,7 @@ const Search = () => {
       }
     };
     fetchAllDogs();
-  }, []);
+  }, [sort, from, setDogs]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -196,37 +194,33 @@ const Search = () => {
           setAgeMax={setAgeMax}
           size={size}
           setSize={setSize}
-          
-       
         />
 
-    
-          <div className="flex gap-4 mb-6 items-center justify-start w-full">
-            <button
-              onClick={() => {
-                setSelectedBreeds([]);
-                setZipCodes("");
-                setAgeMin("");
-                setAgeMax("");
-                setSize("25");
-                searchDogs();
-                setCity("");
-                setState("");
-              }}
-              className="bg-black/80 text-white px-4 py-2 rounded mb-8 cursor-pointer  hover:shadow-lg "
-              disabled={loading}
-            >
-              Clear Filters
-            </button>
-            <button
-              onClick={searchDogs}
-              className="bg-orange-600 text-white px-4 py-2 rounded mb-8 cursor-pointer  hover:shadow-lg "
-              disabled={loading}
-            >
-              Search
-            </button>
-          </div>
-     
+        <div className="flex gap-4 mb-6 items-center justify-start w-full">
+          <button
+            onClick={() => {
+              setSelectedBreeds([]);
+              setZipCodes("");
+              setAgeMin("");
+              setAgeMax("");
+              setSize("25");
+              searchDogs();
+              setCity("");
+              setState("");
+            }}
+            className="bg-black/80 text-white px-4 py-2 rounded mb-8 cursor-pointer  hover:shadow-lg "
+            disabled={loading}
+          >
+            Clear Filters
+          </button>
+          <button
+            onClick={searchDogs}
+            className="bg-orange-600 text-white px-4 py-2 rounded mb-8 cursor-pointer  hover:shadow-lg "
+            disabled={loading}
+          >
+            Search
+          </button>
+        </div>
 
         {/* match and clear favorites */}
         {searchResults && (
