@@ -28,3 +28,19 @@ export interface IAuthContext {
   login: (username: string, email: string) => Promise<void>;
   logout: () => Promise<void>;
 }
+
+export interface ILocationSearchParams {
+  city?: string;
+  states?: string[];
+  geoBoundingBox?: {
+    top?: number;
+    left?: number;
+    bottom?: number;
+    right?: number;
+    bottom_left?: { lat: number; lon: number };
+    top_right?: { lat: number; lon: number };
+  };
+  size?: number;
+  from?: number;
+}
+

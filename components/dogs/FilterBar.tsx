@@ -1,14 +1,25 @@
 import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
 import BreedList from "./BreedList";
-
+import { useState, useEffect } from "react";
+import { searchLocations } from "../../utils/getData";
+import { ILocation } from "@/types";
+import { ILocationSearchParams } from "@/types";
+import { useDebounce } from "@/utils/hooks/useDebounce";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Button } from "../ui/button";
+import { MapPin } from "lucide-react";
 interface IFilterBarProps {
   breeds: string[];
   selectedBreeds: string[];
   setSelectedBreeds: (breeds: string[]) => void;
 
-  selectOpen: boolean;
-  setSelectOpen: (open: boolean) => void;
-  selectRef: React.RefObject<HTMLDivElement>;
+  city: string;
+  setCity: (city: string) => void;
+  state: string;
+  setState: (state: string) => void;
+  // selectOpen: boolean;
+  // setSelectOpen: (open: boolean) => void;
+  // selectRef: React.RefObject<HTMLDivElement>;
   zipCodes: string;
   setZipCodes: (zipCodes: string) => void;
   ageMin: string;
@@ -23,9 +34,13 @@ const FilterBar = ({
   selectedBreeds,
   setSelectedBreeds,
 
-  selectOpen,
-  setSelectOpen,
-  selectRef,
+  city,
+  setCity,
+  state,
+  setState,
+  // selectOpen,
+  // setSelectOpen,
+  // selectRef,
   zipCodes,
   setZipCodes,
   ageMin,
@@ -35,6 +50,42 @@ const FilterBar = ({
   size,
   setSize,
 }: IFilterBarProps) => {
+  const debouncedCity = useDebounce(city, 1500);
+  const debouncedState = useDebounce(state, 1500);
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    const fetchLocations = async () => {
+      if (!debouncedCity && !debouncedState) return;
+      setZipCodes("");
+
+      try {
+        const params: ILocationSearchParams = { size: 25 };
+        if (debouncedCity) params.city = debouncedCity;
+        if (debouncedState) params.states = [debouncedState];
+
+        const response = await searchLocations(params);
+        console.log("response000", response);
+
+        if (response.results.length > 0) {
+          const zipCodes = response.results
+            .map((location: ILocation) => location.zip_code)
+            .join(",");
+          console.log("zipCodes", zipCodes);
+          setZipCodes(zipCodes);
+        }
+        setOpen(false);
+      } catch (error) {
+        console.error("Error fetching locations:", error);
+      }
+    };
+
+    fetchLocations();
+  }, [debouncedCity, debouncedState]);
+
+  useEffect(() => {
+    if (!city && !state) setZipCodes("");
+  }, [city, state]);
+
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
       setSelectedBreeds(breeds);
@@ -53,22 +104,45 @@ const FilterBar = ({
           selectedBreeds={selectedBreeds}
           setSelectedBreeds={setSelectedBreeds}
           handleSelectAll={handleSelectAll}
-          selectOpen={selectOpen}
-          setSelectOpen={setSelectOpen}
-          selectRef={selectRef as React.RefObject<HTMLDivElement>}
+          // selectOpen={selectOpen}
+          // setSelectOpen={setSelectOpen}
+          // selectRef={selectRef as React.RefObject<HTMLDivElement>}
         />
       </div>
 
       {/* Zip codes filter */}
       <div>
-        <h2 className="font-semibold mb-2">Zip Codes</h2>
-        <input
-          type="text"
-          value={zipCodes}
-          onChange={(e) => setZipCodes(e.target.value)}
-          placeholder="Comma-separated zip codes"
-          className="focus:outline-none focus:border-2 w-full p-2 border rounded h-[40px] border-zinc-600 shadow-md bg-white/70 text-sm "
-        />
+        <h2 className="font-semibold mb-2">Location</h2>
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button className="w-full justify-start border-zinc-600 bg-white/70 h-10">
+              <MapPin className="w-full" /> Filter by location
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="min-w-full bg-white">
+            <input
+              type="text"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              placeholder="City"
+              className="focus:outline-none focus:border-2 w-full p-2 border-b rounded h-[40px] border-zinc-600 shadow-md bg-white/70 text-sm "
+            />
+            <input
+              type="text"
+              value={state}
+              onChange={(e) => setState(e.target.value.toUpperCase())}
+              placeholder="2-letter State"
+              className="focus:outline-none focus:border-2 w-full p-2 border-b rounded h-[40px] border-zinc-600 shadow-md bg-white/70 text-sm "
+            />
+            <input
+              type="text"
+              value={zipCodes}
+              onChange={(e) => setZipCodes(e.target.value)}
+              placeholder="Comma-separated zip codes"
+              className="focus:outline-none focus:border-2 w-full p-2 border-b rounded h-[40px] border-zinc-600 shadow-md bg-white/70 text-sm "
+            />
+          </PopoverContent>
+        </Popover>
       </div>
 
       {/* Age range filters */}
@@ -131,7 +205,6 @@ const FilterBar = ({
           </SelectContent>
         </Select>
       </div>
-      
     </div>
   );
 };

@@ -2,6 +2,7 @@
 import FilterBar from "@/components/dogs/FilterBar";
 import { MatchDialog } from "@/components/dogs/MatchDialog";
 import SearchResult from "@/components/dogs/SearchResult";
+import SearchResultHeader from "@/components/dogs/SearchResultHeader";
 import SortBy from "@/components/dogs/SortBy";
 import { useDogSearch } from "@/contexts/DogContext";
 import { IDog, ISearchResults } from "@/types";
@@ -14,17 +15,20 @@ import {
 import { useDebounce } from "@/utils/hooks/useDebounce";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const Search = () => {
   const [breeds, setBreeds] = useState<string[]>([]);
   const [selectedBreeds, setSelectedBreeds] = useState<string[]>([]);
   const [zipCodes, setZipCodes] = useState<string>("");
+ 
+  const [city, setCity] = useState<string>("");
+  const [state, setState] = useState<string>("");
   const [ageMin, setAgeMin] = useState<string>("");
   const [ageMax, setAgeMax] = useState<string>("");
   const [size, setSize] = useState<string>("25");
-  const [selectOpen, setSelectOpen] = useState<boolean>(false);
-  const selectRef = useRef<HTMLDivElement>(null);
+  // const [selectOpen, setSelectOpen] = useState<boolean>(false);
+  // const selectRef = useRef<HTMLDivElement>(null);
   const [searchResults, setSearchResults] = useState<ISearchResults | null>(
     null
   );
@@ -121,19 +125,19 @@ const Search = () => {
     searchDogs,
   ]);
 
-  useEffect(() => {
-    const handleClickOutside = async (event: MouseEvent) => {
-      if (
-        selectRef.current &&
-        !selectRef.current.contains(event.target as Node)
-      ) {
-        setSelectOpen(false);
-      }
-    };
+  // useEffect(() => {
+  //   const handleClickOutside = async (event: MouseEvent) => {
+  //     if (
+  //       selectRef.current &&
+  //       !selectRef.current.contains(event.target as Node)
+  //     ) {
+  //       setSelectOpen(false);
+  //     }
+  //   };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   return () => document.removeEventListener("mousedown", handleClickOutside);
+  // }, []);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -192,11 +196,16 @@ const Search = () => {
           breeds={breeds}
           selectedBreeds={selectedBreeds}
           setSelectedBreeds={setSelectedBreeds}
-          selectOpen={selectOpen}
-          setSelectOpen={setSelectOpen}
-          selectRef={selectRef as React.RefObject<HTMLDivElement>}
+          // selectOpen={selectOpen}
+          // setSelectOpen={setSelectOpen}
+          // selectRef={selectRef as React.RefObject<HTMLDivElement>}
           zipCodes={zipCodes}
           setZipCodes={setZipCodes}
+        
+          city={city}
+          setCity={setCity}
+          state={state}
+          setState={setState}
           ageMin={ageMin}
           setAgeMin={setAgeMin}
           ageMax={ageMax}
@@ -257,7 +266,11 @@ const Search = () => {
           </div>
         )}
       </motion.div>
-
+      {!loading && (selectedBreeds.length > 0 || city || state || ageMin || ageMax || zipCodes) && (
+        <div>
+          <SearchResultHeader city={city} state={state} selectedBreeds={selectedBreeds} ageMin={ageMin} ageMax={ageMax} zipCodes={zipCodes}            />
+        </div>
+      )}
       {/* Dog results grid */}
       <SearchResult
         loading={loading}
