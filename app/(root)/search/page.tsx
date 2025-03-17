@@ -2,7 +2,6 @@
 import FilterBar from "@/components/dogs/FilterBar";
 import { MatchDialog } from "@/components/dogs/MatchDialog";
 import SearchResult from "@/components/dogs/SearchResult";
-import SearchResultHeader from "@/components/dogs/SearchResultHeader";
 import SortBy from "@/components/dogs/SortBy";
 import { useDogSearch } from "@/contexts/DogContext";
 import { IDog, ISearchResults } from "@/types";
@@ -12,16 +11,15 @@ import {
   fetchDogs,
   handleDogSearch,
 } from "@/utils/getData";
-import { useDebounce } from "@/utils/hooks/useDebounce";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const Search = () => {
   const [breeds, setBreeds] = useState<string[]>([]);
   const [selectedBreeds, setSelectedBreeds] = useState<string[]>([]);
   const [zipCodes, setZipCodes] = useState<string>("");
- 
+
   const [city, setCity] = useState<string>("");
   const [state, setState] = useState<string>("");
   const [ageMin, setAgeMin] = useState<string>("");
@@ -42,10 +40,10 @@ const Search = () => {
   const { favorites, setFavorites } = useDogSearch();
 
   // Debounce the search inputs
-  const debouncedBreeds = useDebounce(selectedBreeds, 1000);
-  const debouncedZipCodes = useDebounce(zipCodes, 1000);
-  const debouncedAgeMin = useDebounce(ageMin, 1000);
-  const debouncedAgeMax = useDebounce(ageMax, 1000);
+  // const debouncedBreeds = useDebounce(selectedBreeds, 1000);
+  // const debouncedZipCodes = useDebounce(zipCodes, 1000);
+  // const debouncedAgeMin = useDebounce(ageMin, 1000);
+  // const debouncedAgeMax = useDebounce(ageMax, 1000);
 
   useEffect(() => {
     const getBreeds = async () => {
@@ -58,8 +56,11 @@ const Search = () => {
     };
     getBreeds();
   }, []);
+  
 
-  const searchDogs = useCallback(async () => {
+  const searchDogs = async () => {
+    console.log("zipcodes", zipCodes);
+ 
     setLoading(true);
     try {
       const params = new URLSearchParams();
@@ -68,21 +69,21 @@ const Search = () => {
       params.set("from", from.toString());
       params.set("size", size);
 
-      if (debouncedBreeds.length > 0) {
-        debouncedBreeds.forEach((breed) => {
+      if (selectedBreeds.length > 0) {
+        selectedBreeds.forEach((breed) => {
           params.append("breeds", breed);
         });
       }
-
-      if (debouncedZipCodes) {
-        debouncedZipCodes.split(",").forEach((zip) => {
+     
+      if (zipCodes) {
+        zipCodes.split(",").forEach((zip) => {
           params.append("zipCodes", zip.trim());
         });
       }
 
-      if (debouncedAgeMin) params.append("ageMin", debouncedAgeMin);
-      if (debouncedAgeMax) params.append("ageMax", debouncedAgeMax);
-
+      if (ageMin) params.append("ageMin", ageMin);
+      if (ageMax) params.append("ageMax", ageMax);
+      console.log("params", params.toString());
       const searchResponse = await handleDogSearch(params.toString());
       setSearchResults(searchResponse);
       console.log("searchResponse", searchResponse);
@@ -101,43 +102,27 @@ const Search = () => {
     } finally {
       setLoading(false);
     }
-  }, [
-    debouncedBreeds,
-    debouncedZipCodes,
-    debouncedAgeMin,
-    debouncedAgeMax,
-    from,
-    size,
-    sort,
-    setDogs,
-  ]);
+  };
 
   useEffect(() => {
-    searchDogs();
-  }, [
-    debouncedBreeds,
-    debouncedZipCodes,
-    debouncedAgeMin,
-    debouncedAgeMax,
-    from,
-    size,
-    sort,
-    searchDogs,
-  ]);
+    const fetchAllDogs = async () => {
+      const response = await handleDogSearch("sort=breed%3Aasc&from=0&size=25");
+      setSearchResults(response);
+      console.log("searchResponse", response);
 
-  // useEffect(() => {
-  //   const handleClickOutside = async (event: MouseEvent) => {
-  //     if (
-  //       selectRef.current &&
-  //       !selectRef.current.contains(event.target as Node)
-  //     ) {
-  //       setSelectOpen(false);
-  //     }
-  //   };
+      if (response.resultIds.length > 0) {
+        const dogsResponse = await fetchDogs({
+          dogIds: response.resultIds,
+        });
+        console.log("dogsResponse", dogsResponse);
 
-  //   document.addEventListener("mousedown", handleClickOutside);
-  //   return () => document.removeEventListener("mousedown", handleClickOutside);
-  // }, []);
+        setDogs(dogsResponse);
+      } else {
+        setDogs([]);
+      }
+    };
+    fetchAllDogs();
+  }, []);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -201,7 +186,6 @@ const Search = () => {
           // selectRef={selectRef as React.RefObject<HTMLDivElement>}
           zipCodes={zipCodes}
           setZipCodes={setZipCodes}
-        
           city={city}
           setCity={setCity}
           state={state}
@@ -212,24 +196,38 @@ const Search = () => {
           setAgeMax={setAgeMax}
           size={size}
           setSize={setSize}
+          
+       
         />
 
-        {(selectedBreeds.length > 0 || zipCodes || ageMin || ageMax) && (
-          <button
-            onClick={() => {
-              setSelectedBreeds([]);
-              setZipCodes("");
-              setAgeMin("");
-              setAgeMax("");
-              setSize("25");
-              searchDogs();
-            }}
-            className="bg-black/80 text-white px-4 py-2 rounded mb-8 cursor-pointer  hover:shadow-lg "
-            disabled={loading}
-          >
-            Clear Filters
-          </button>
-        )}
+    
+          <div className="flex gap-4 mb-6 items-center justify-start w-full">
+            <button
+              onClick={() => {
+                setSelectedBreeds([]);
+                setZipCodes("");
+                setAgeMin("");
+                setAgeMax("");
+                setSize("25");
+                searchDogs();
+                setCity("");
+                setState("");
+              }}
+              className="bg-black/80 text-white px-4 py-2 rounded mb-8 cursor-pointer  hover:shadow-lg "
+              disabled={loading}
+            >
+              Clear Filters
+            </button>
+            <button
+              onClick={searchDogs}
+              className="bg-orange-600 text-white px-4 py-2 rounded mb-8 cursor-pointer  hover:shadow-lg "
+              disabled={loading}
+            >
+              Search
+            </button>
+          </div>
+     
+
         {/* match and clear favorites */}
         {searchResults && (
           <div className="flex gap-4 mb-6 items-center justify-between w-full">
@@ -266,11 +264,24 @@ const Search = () => {
           </div>
         )}
       </motion.div>
-      {!loading && (selectedBreeds.length > 0 || city || state || ageMin || ageMax || zipCodes) && (
-        <div>
-          <SearchResultHeader city={city} state={state} selectedBreeds={selectedBreeds} ageMin={ageMin} ageMax={ageMax} zipCodes={zipCodes}            />
-        </div>
-      )}
+      {/* {(!loading && selectedBreeds.length > 0) ||
+        city ||
+        state ||
+        ageMin ||
+        ageMax ||
+        (zipCodes && (
+          <div>
+            <SearchResultHeader
+              city={city}
+              state={state}
+              selectedBreeds={selectedBreeds}
+              ageMin={ageMin}
+              ageMax={ageMax}
+              zipCodes={zipCodes}
+              dogs={dogs}
+            />
+          </div>
+        ))} */}
       {/* Dog results grid */}
       <SearchResult
         loading={loading}

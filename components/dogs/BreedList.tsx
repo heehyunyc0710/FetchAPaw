@@ -51,7 +51,15 @@ const BreedList: React.FC<BreedListProps> = ({
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="min-w-full bg-white">
+      <PopoverContent
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            setOpen(false);
+          }
+        }}
+        className="min-w-full bg-white"
+      >
         <Command className="w-full">
           <CommandInput placeholder="Search breeds..." className="w-full" />
           <CommandList className="max-h-[300px] overflow-y-auto w-full">

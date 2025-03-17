@@ -1,6 +1,5 @@
 # FetchAPAW
 
-
 ![landing](./public/images/landing.png)
 
 ## Overview
@@ -12,6 +11,12 @@ FetchAPAW is a web application that helps dog-lovers find their perfect furry fr
 1. Clone the repository
 2. Run `npm install` to install the dependencies
 3. Run `npm run dev` to start the development server
+4. Note: API keys are not included in the repository. Please create a `.env.local` file and add the following:
+
+```
+NEXT_PUBLIC_API_URL=this is the API domain
+NEXT_PUBLIC_IMAGE_SRC=this is the domain where api images are stored
+```
 
 ## Features
 

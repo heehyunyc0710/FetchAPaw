@@ -25,6 +25,7 @@ const SearchResult = ({
   from: number;
   size: string;
 }) => {
+  
   return (
     <div className="w-full h-[50vh] min-h-[fit-content]">
         {loading ? (
@@ -38,6 +39,7 @@ const SearchResult = ({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.5 }}
           >
+            
             {!dogs.length ? (
               <p className="text-center py-8">No dogs found</p>
             ) : (

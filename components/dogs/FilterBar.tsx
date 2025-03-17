@@ -53,13 +53,14 @@ const FilterBar = ({
   const debouncedCity = useDebounce(city, 1500);
   const debouncedState = useDebounce(state, 1500);
   const [open, setOpen] = useState(false);
+
   useEffect(() => {
     const fetchLocations = async () => {
       if (!debouncedCity && !debouncedState) return;
       setZipCodes("");
 
       try {
-        const params: ILocationSearchParams = { size: 25 };
+        const params: ILocationSearchParams = { size: Number(size) };
         if (debouncedCity) params.city = debouncedCity;
         if (debouncedState) params.states = [debouncedState];
 
@@ -73,14 +74,13 @@ const FilterBar = ({
           console.log("zipCodes", zipCodes);
           setZipCodes(zipCodes);
         }
-        setOpen(false);
       } catch (error) {
         console.error("Error fetching locations:", error);
       }
     };
 
-    fetchLocations();
-  }, [debouncedCity, debouncedState]);
+    if (!open) fetchLocations();
+  }, [debouncedCity, debouncedState, open]);
 
   useEffect(() => {
     if (!city && !state) setZipCodes("");
@@ -119,28 +119,53 @@ const FilterBar = ({
               <MapPin className="w-full" /> Filter by location
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="min-w-full bg-white">
-            <input
-              type="text"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              placeholder="City"
-              className="focus:outline-none focus:border-2 w-full p-2 border-b rounded h-[40px] border-zinc-600 shadow-md bg-white/70 text-sm "
-            />
-            <input
-              type="text"
-              value={state}
-              onChange={(e) => setState(e.target.value.toUpperCase())}
-              placeholder="2-letter State"
-              className="focus:outline-none focus:border-2 w-full p-2 border-b rounded h-[40px] border-zinc-600 shadow-md bg-white/70 text-sm "
-            />
-            <input
-              type="text"
-              value={zipCodes}
-              onChange={(e) => setZipCodes(e.target.value)}
-              placeholder="Comma-separated zip codes"
-              className="focus:outline-none focus:border-2 w-full p-2 border-b rounded h-[40px] border-zinc-600 shadow-md bg-white/70 text-sm "
-            />
+          <PopoverContent
+            className="min-w-full bg-white"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                setOpen(false);
+              }
+            }}
+          >
+            <>
+              <input
+                type="text"
+                value={city}
+                onChange={(e) => {
+                  setCity(e.target.value);
+                  setZipCodes("");
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    setOpen(false);
+                  }
+                }}
+                placeholder="City"
+                className="focus:outline-none focus:border-2 w-full p-2 border-b rounded h-[40px] border-zinc-600 shadow-md bg-white/70 text-sm "
+              />
+              <input
+                type="text"
+                value={state}
+                onChange={(e) => {
+                  setState(e.target.value.toUpperCase());
+                  setZipCodes("");
+                }}
+                placeholder="2-letter State"
+                className="focus:outline-none focus:border-2 w-full p-2 border-b rounded h-[40px] border-zinc-600 shadow-md bg-white/70 text-sm "
+              />
+              <input
+                type="text"
+                value={zipCodes}
+                onChange={(e) => {
+                  setZipCodes(e.target.value);
+                  setCity("");
+                  setState("");
+                }}
+                placeholder="Comma-separated zip codes"
+                className="focus:outline-none focus:border-2 w-full p-2 border-b rounded h-[40px] border-zinc-600 shadow-md bg-white/70 text-sm "
+              />
+            </>
           </PopoverContent>
         </Popover>
       </div>
