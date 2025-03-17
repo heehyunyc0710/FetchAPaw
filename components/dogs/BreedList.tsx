@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/popover";
 import { useState } from "react";
 import { IBreedListProps } from "@/types";
+import CustomCommandList from "../ui/CustomCommandList";
 
 const BreedList: React.FC<IBreedListProps> = ({
   breeds,
@@ -56,7 +57,7 @@ const BreedList: React.FC<IBreedListProps> = ({
       >
         <Command className="w-full">
           <CommandInput placeholder="Search breeds..." className="w-full" />
-          <CommandList className="max-h-[300px] overflow-y-auto w-full">
+          <CustomCommandList  className="max-h-[300px] overflow-y-auto w-full">
             {/* <CommandEmpty>No breeds found.</CommandEmpty> */}
             <CommandGroup className="w-full ">
               <CommandItem
@@ -110,7 +111,7 @@ const BreedList: React.FC<IBreedListProps> = ({
                   </CommandItem>
                 ))}
             </CommandGroup>
-          </CommandList>
+          </CustomCommandList>
         </Command>
       </PopoverContent>
     </Popover>
