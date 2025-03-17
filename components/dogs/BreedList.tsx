@@ -20,7 +20,6 @@ import {
 import { useState } from "react";
 import { IBreedListProps } from "@/types";
 
-
 const BreedList: React.FC<IBreedListProps> = ({
   breeds,
   selectedBreeds,
@@ -81,7 +80,9 @@ const BreedList: React.FC<IBreedListProps> = ({
               </CommandItem>
               {breeds.map((breed) => (
                 <CommandItem
-                  className={`hover:bg-yellow-200 cursor-pointer ${selectedBreeds.includes(breed) ? "bg-yellow-300" : ""}`}
+                  className={`hover:bg-yellow-200 cursor-pointer ${
+                    selectedBreeds.includes(breed) ? "bg-yellow-300" : ""
+                  }`}
                   key={breed}
                   value={breed}
                   onSelect={() => {
