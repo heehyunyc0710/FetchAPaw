@@ -26,7 +26,7 @@ const Navbar: React.FC = () => {
         label: "Dismiss",
         onClick: () => console.log("Undo"),
       },
-    })
+    });
   };
 
   return (
@@ -34,58 +34,67 @@ const Navbar: React.FC = () => {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.5 }}
-      className="container mx-auto mt-5  py-8 flex items-center justify-between relative "
+      className="container mx-auto mt-5 py-8 px-4 md:px-0 "
     >
-      <div className="flex items-center">
-        <Link href="/" className="flex items-center">
-          {/* <h2 className="text-5xl font-bold color-primary nerko-one-regular ">FetchAPaw</h2> */}
-          <Image
-            src="/images/main-logo.png"
-            alt="FetchAPaw"
-            width={220}
-            height={100}
-          />
-        </Link>
-      </div>
-      <div className="items-center space-x-4 flex justify-center">
-        {currentPath !== "/" && (
-          <Link
-            href="/"
-            className="p-0 px-4 rounded  transition-colors  cursor-pointer hover:font-semibold"
-          >
-            Home
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0">
+        {/* Logo */}
+        <div className="flex items-center">
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/images/main-logo.png"
+              alt="FetchAPaw"
+              width={220}
+              height={100}
+              className="w-[180px] md:w-[220px]"
+            />
           </Link>
-        )}
-        <AboutButton onClick={() => setAboutModalOpen(true)} />
-        <p
-          onClick={() => setContactModalOpen(true)}
-          className="p-0   px-4  rounded  transition-colors  cursor-pointer hover:font-semibold"
-        >
-          Contact
-        </p>
-        {user && currentPath !== "/search" && (
-          <p
-            onClick={() => router.push("/search")}
-            className="p-0   px-4  rounded  transition-colors  cursor-pointer hover:font-semibold"
-          >
-            Search
-          </p>
-        )}
-      </div>
-      <div className="flex items-center">
-        {!user && <LoginButton onClick={() => setLoginModalOpen(true)} />}
-        {user && (
-          <>
-            <p className="mr-4 text-md">Welcome, {user.name}</p>
-            <button
-              className=" cursor-pointer bg-yellow-500 text-zinc-700 rounded-full px-4 py-2"
-              onClick={handleLogout}
+        </div>
+
+        {/* Navigation Links */}
+        <div className="flex items-center space-x-2 md:space-x-4 text-sm md:text-base">
+          {currentPath !== "/" && (
+            <Link
+              href="/"
+              className="p-0 px-2 md:px-4 rounded transition-colors cursor-pointer hover:font-semibold"
             >
-              Log Out
-            </button>
-          </>
-        )}
+              Home
+            </Link>
+          )}
+          <AboutButton onClick={() => setAboutModalOpen(true)} />
+          <p
+            onClick={() => setContactModalOpen(true)}
+            className="p-0 px-2 md:px-4 rounded transition-colors cursor-pointer hover:font-semibold"
+          >
+            Contact
+          </p>
+          {user && currentPath !== "/search" && (
+            <p
+              onClick={() => router.push("/search")}
+              className="p-0 px-2 md:px-4 rounded transition-colors cursor-pointer hover:font-semibold"
+            >
+              Search
+            </p>
+          )}
+        </div>
+
+        {/* Auth Section */}
+        <div className="flex items-center flex-wrap justify-center gap-2">
+          {!user && <LoginButton onClick={() => setLoginModalOpen(true)} />}
+          {user && (
+            <>
+              <p className="text-sm md:text-md md:mr-4">Welcome, {user.name}</p>
+              <button
+                className="cursor-pointer bg-yellow-500 text-zinc-700 rounded-full px-3 py-1 md:px-4 md:py-2 text-sm md:text-base"
+                onClick={handleLogout}
+              >
+                Log Out
+              </button>
+            </>
+          )}
+        </div>
       </div>
+
+      {/* Modals */}
       <LoginModal
         loginModalOpen={loginModalOpen}
         setLoginModalOpen={setLoginModalOpen}

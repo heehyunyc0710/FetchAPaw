@@ -1,3 +1,4 @@
+import { ILocationSearchParams } from "@/types";
 import axios from "axios";
 
 export const fetchDogs = async ({ dogIds = [] }: { dogIds: string[] }) => {
@@ -44,4 +45,22 @@ export const fetchDogLocation = async (zipCodes: string[]) => {
     { withCredentials: true }
   );
   return response.data;
+};
+
+
+
+export const searchLocations = async (params: ILocationSearchParams) => {
+  console.log("location params",params)
+  try {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_URL}/locations/search`,
+      params,
+      { withCredentials: true }
+    );
+    console.log("responseeeee",response)
+    return response.data;
+  } catch (error) {
+    console.error("Error searching locations:", error);
+    throw error;
+  }
 };

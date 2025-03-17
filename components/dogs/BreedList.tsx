@@ -1,85 +1,117 @@
+"use client";
+
+import * as React from "react";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Command,
+  // CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { useState } from "react";
+import { IBreedListProps } from "@/types";
 
-interface BreedListProps {
-  breeds: string[];
-  selectedBreeds: string[];
-  setSelectedBreeds: (breeds: string[]) => void;
-  handleSelectAll: (checked: boolean) => void;
-  selectOpen: boolean;
-  setSelectOpen: (open: boolean) => void;
-  selectRef: React.RefObject<HTMLDivElement>;
-}
 
-const BreedList: React.FC<BreedListProps> = ({
+const BreedList: React.FC<IBreedListProps> = ({
   breeds,
   selectedBreeds,
   setSelectedBreeds,
   handleSelectAll,
-  selectOpen,
-  setSelectOpen,
-  selectRef,
 }) => {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Select
-      open={selectOpen}
-      value={selectedBreeds.join(",")}
-      onValueChange={(value) => {
-        if (!selectedBreeds.includes(value)) {
-          setSelectedBreeds([...selectedBreeds, value]);
-        } else {
-          setSelectedBreeds(selectedBreeds.filter((breed) => breed !== value));
-        }
-      }}
-    >
-      <SelectTrigger
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          setSelectOpen(!selectOpen);
-        }}
-        className="w-full h-[40px]  border-zinc-600 shadow-md bg-white/70 cursor-pointer"
-      >
-        <SelectValue placeholder="Select Breeds">
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-full justify-between border-zinc-600 bg-white/70 h-10 shadow-lg"
+        >
           {selectedBreeds.length > 0
             ? `${selectedBreeds.length} breed${
                 selectedBreeds.length > 1 ? "s" : ""
               } selected`
-            : null}
-        </SelectValue>
-      </SelectTrigger>
-      <SelectContent ref={selectRef} className="bg-white">
-        <div className="px-2 py-1 border-b">
-          <label className="flex items-center space-x-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={selectedBreeds.length === breeds.length}
-              onChange={(e) => handleSelectAll(e.target.checked)}
-              className="rounded border-gray-300 text-yellow-600 focus:ring-yellow-500"
-            />
-            <span className="text-sm">Select All</span>
-          </label>
-        </div>
-        {breeds.map((breed, index) => (
-          <SelectItem
-            key={index}
-            value={breed}
-            className={`cursor-pointer ${
-              selectedBreeds.includes(breed)
-                ? "bg-yellow-100 text-yellow-700 font-medium"
-                : "hover:bg-yellow-200"
-            }`}
-          >
-            {breed}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+            : "Select breeds..."}
+          <ChevronsUpDown className="opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            setOpen(false);
+          }
+        }}
+        className="min-w-full bg-white"
+      >
+        <Command className="w-full">
+          <CommandInput placeholder="Search breeds..." className="w-full" />
+          <CommandList className="max-h-[300px] overflow-y-auto w-full">
+            {/* <CommandEmpty>No breeds found.</CommandEmpty> */}
+            <CommandGroup className="w-full ">
+              <CommandItem
+                value="select-all"
+                className="hover:bg-yellow-200 cursor-pointer"
+                onSelect={() => {
+                  handleSelectAll(selectedBreeds.length !== breeds.length);
+                }}
+              >
+                <div className="flex items-center">
+                  <Check
+                    className={cn(
+                      "mr-2",
+                      selectedBreeds.length === breeds.length
+                        ? "opacity-100"
+                        : "opacity-0"
+                    )}
+                  />
+                  Select All
+                </div>
+              </CommandItem>
+              {breeds.map((breed) => (
+                <CommandItem
+                  className={`hover:bg-yellow-200 cursor-pointer ${selectedBreeds.includes(breed) ? "bg-yellow-300" : ""}`}
+                  key={breed}
+                  value={breed}
+                  onSelect={() => {
+                    if (selectedBreeds.includes(breed)) {
+                      setSelectedBreeds(
+                        selectedBreeds.filter((b) => b !== breed)
+                      );
+                    } else {
+                      setSelectedBreeds([...selectedBreeds, breed]);
+                    }
+                  }}
+                >
+                  <div className="flex items-center">
+                    <Check
+                      className={cn(
+                        "mr-2",
+                        selectedBreeds.includes(breed)
+                          ? "opacity-100"
+                          : "opacity-0"
+                      )}
+                    />
+                    {breed}
+                  </div>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
   );
 };
 
