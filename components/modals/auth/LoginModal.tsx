@@ -14,7 +14,6 @@ import { toast } from "sonner";
 export function LoginModal({
   loginModalOpen,
   setLoginModalOpen,
- 
 }: {
   loginModalOpen: boolean;
   setLoginModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -22,36 +21,34 @@ export function LoginModal({
 }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [error, setError] = useState({username: "", email: ""});
+  const [error, setError] = useState({ username: "", email: "" });
   const { login } = useAuth();
   const handleLogIn = async () => {
     if (!username) {
-      setError({...error, username: "Please enter your username"});
+      setError({ ...error, username: "Please enter your username" });
       return;
     }
     if (!email) {
-      setError({...error, email: "Please enter your email"});
+      setError({ ...error, email: "Please enter your email" });
       return;
     }
-    await login(username, email); 
+    await login(username, email);
     toast("Login successful", {
       description: "Welcome back!",
       action: {
         label: "Dismiss",
         onClick: () => console.log("Undo"),
       },
-    })
+    });
 
     setLoginModalOpen(false);
     // console.log(res)
   };
   return (
     <Dialog open={loginModalOpen} onOpenChange={setLoginModalOpen}>
-
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Log In</DialogTitle>
-        
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
@@ -65,7 +62,7 @@ export function LoginModal({
               onChange={(e) => setUsername(e.target.value)}
             />
           </div>
-            {error.username && <p className="text-red-500">{error.username}</p>}
+          {error.username && <p className="text-red-500">{error.username}</p>}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="email" className="text-right">
               Email
@@ -77,7 +74,7 @@ export function LoginModal({
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-            {error.email && <p className="text-red-500">{error.email}</p>}
+          {error.email && <p className="text-red-500">{error.email}</p>}
         </div>
         <DialogFooter>
           <button

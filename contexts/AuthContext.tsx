@@ -9,7 +9,7 @@ import {
 import axios from "axios";
 
 import { useRouter } from "next/navigation";
-import { IAuthContext } from "@/types";
+import { IAuthContext, IUser } from "@/types";
 
 const AuthContext = createContext<IAuthContext | undefined>(undefined);
 
@@ -18,9 +18,7 @@ export const AuthContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [user, setUser] = useState<{ name: string; email: string } | null>(
-    null
-  );
+  const [user, setUser] = useState<IUser | null>(null);
   const router = useRouter();
 
   const validateUser = useCallback(() => {

@@ -2,9 +2,11 @@ import { ILocationSearchParams } from "@/types";
 import axios from "axios";
 
 export const fetchDogs = async ({ dogIds = [] }: { dogIds: string[] }) => {
+  // no more than 100 dog ids
+  const limitedDogIds = dogIds.slice(0, 100);
   const response = await axios.post(
     `${process.env.NEXT_PUBLIC_API_URL}/dogs`,
-    dogIds,
+    limitedDogIds,
     {
       withCredentials: true,
     }
@@ -38,26 +40,27 @@ export const handleDogSearch = async (params: string) => {
 };
 
 export const fetchDogLocation = async (zipCodes: string[]) => {
+  // no more than 100 ZIP codes
+  const limitedZipCodes = zipCodes.slice(0, 100);
+
   const response = await axios.post(
     `${process.env.NEXT_PUBLIC_API_URL}/locations`,
-    zipCodes,
-
+    limitedZipCodes, 
     { withCredentials: true }
   );
+
   return response.data;
 };
 
-
-
 export const searchLocations = async (params: ILocationSearchParams) => {
-  console.log("location params",params)
+  console.log("location params", params);
   try {
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_API_URL}/locations/search`,
       params,
       { withCredentials: true }
     );
-    console.log("responseeeee",response)
+    console.log("responseeeee", response);
     return response.data;
   } catch (error) {
     console.error("Error searching locations:", error);

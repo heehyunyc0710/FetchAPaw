@@ -1,6 +1,6 @@
 # FetchAPAW
 
-![landing](./public/images/landing.png)
+
 
 ## Overview
 

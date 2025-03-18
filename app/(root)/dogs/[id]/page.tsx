@@ -1,5 +1,5 @@
 "use client";
-import DogDetail from "@/components/dogs/DogDetail";
+import DogDetail from "@/components/search/DogDetail";
 import Loader from "@/components/Loader";
 import { useDogSearch } from "@/contexts/DogContext";
 import { IDog } from "@/types";
@@ -17,7 +17,6 @@ const DogDetailPage = () => {
   useEffect(() => {
     const fetchDogData = async () => {
       try {
-        
         const existingDog = dogs.find((d) => d.id === dogId);
         if (existingDog) {
           setDog(existingDog);
@@ -25,13 +24,12 @@ const DogDetailPage = () => {
         }
 
         // If not found, fetch from API
-        const response = await fetchDogs({dogIds: [dogId]});
+        const response = await fetchDogs({ dogIds: [dogId] });
 
         if (response.length > 0) {
           setDog(response[0]);
         } else {
           console.error("Dog not found");
-        
         }
       } catch (error) {
         console.error("Error fetching dog:", error);
@@ -41,10 +39,10 @@ const DogDetailPage = () => {
     };
 
     fetchDogData();
-  }, [dogId, dogs]); 
+  }, [dogId, dogs]);
 
   if (loading) {
-    return <Loader/>
+    return <Loader />;
   }
 
   if (!dog) {

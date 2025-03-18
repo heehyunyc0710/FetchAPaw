@@ -1,12 +1,25 @@
-import React from "react";
-import { IFavoritesActionsProps } from "@/types";
+import { useDogSearch } from "@/contexts/DogContext";
+import { fetchDogMatch, fetchDogs } from "@/utils/getData";
 
+const FavoritesActions = () => {
+  // favorites,
+  // setFavorites,
+  // generateMatch,
+  
+  const { setMatchResult } = useDogSearch();
+  const generateMatch = async () => {
+    try {
+      const response = await fetchDogMatch({ favorites });
 
-const FavoritesActions: React.FC<IFavoritesActionsProps> = ({
-  favorites,
-  generateMatch,
-  setFavorites,
-}) => {
+      // Fetch matched dog details
+      const matchResponse = await fetchDogs({ dogIds: [response.match] });
+
+      setMatchResult(matchResponse[0]);
+    } catch (error) {
+      console.error("Error generating match:", error);
+    }
+  };
+  const { favorites, setFavorites } = useDogSearch();
   return (
     <div>
       {favorites?.length > 0 && (
