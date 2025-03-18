@@ -19,7 +19,7 @@ const FilterActionButtons = ({
     setState,
   } = useDogSearch();
   return (
-    <div className="flex gap-4 items-end justify-end w-full">
+    <div className="flex gap-4 items-end justify-end w-full pb-2">
       <button
         onClick={() => {
           setSelectedBreeds([]);
