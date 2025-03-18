@@ -6,11 +6,9 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Command,
-  // CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-  // CommandList,
 } from "@/components/ui/command";
 import {
   Popover,
@@ -19,7 +17,7 @@ import {
 } from "@/components/ui/popover";
 import { useState } from "react";
 import { IBreedListProps } from "@/types";
-import CustomCommandList from "../ui/CustomCommandList";
+import CustomCommandList from "../../ui/CustomCommandList";
 
 const BreedList: React.FC<IBreedListProps> = ({
   breeds,
@@ -50,14 +48,31 @@ const BreedList: React.FC<IBreedListProps> = ({
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             e.preventDefault();
+            e.stopPropagation();
             setOpen(false);
           }
         }}
         className="min-w-full bg-white"
       >
-        <Command className="w-full">
-          <CommandInput placeholder="Search breeds..." className="w-full" />
-          <CustomCommandList  className="max-h-[300px] overflow-y-auto w-full">
+        <Command
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+            }
+          }}
+          className="w-full"
+        >
+          <CommandInput
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                e.stopPropagation();
+              }
+            }}
+            placeholder="Search breeds..."
+            className="w-full"
+          />
+          <CustomCommandList className="max-h-[300px] overflow-y-auto w-full">
             {/* <CommandEmpty>No breeds found.</CommandEmpty> */}
             <CommandGroup className="w-full ">
               <CommandItem

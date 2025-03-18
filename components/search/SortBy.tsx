@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
-
+import { useDogSearch } from "@/contexts/DogContext";
 const sortingOptions = [
   { value: "breed:asc", label: "Breed (A-Z)" },
   { value: "breed:desc", label: "Breed (Z-A)" },
@@ -10,15 +10,8 @@ const sortingOptions = [
   { value: "name:desc", label: "Name (Z-A)" },
 ];
 
-const SortBy = ({
-  sort,
-  setSort,
-
-}: {
-  sort: string;
-  setSort: (sort: string) => void;
-
-}) => {
+const SortBy = () => {
+  const { sort, setSort } = useDogSearch();
   const [sortByKey, setSortByKey] = useState<string>("Breed (A-Z)");
   const handleSortValueChange = (value: string) => {
     setSort(value);

@@ -59,26 +59,16 @@ export interface IFilterBarProps {
   setAgeMin: (ageMin: string) => void;
   ageMax: string;
   setAgeMax: (ageMax: string) => void;
-  size: string;
-  setSize: (size: string) => void;
+  // size: string;
+  // setSize: (size: string) => void;
 }
 
 export interface IMatchDialogProps {
-  dog: IDog;
+
   onClose: () => void;
 }
 
-interface ISearchResultProps {
-  loading: boolean;
-  dogs: IDog[];
-  favorites: string[];
-  toggleFavorite: (dogId: string) => void;
-  handleViewDog: (dogId: string) => void;
-  handlePagination: (direction: 'prev' | 'next') => void;
-  searchResults: ISearchResults;
-  from: number;
-  size: string;
-}
+
 
 export interface ISearchResultHeaderProps{
   city: string;
@@ -98,7 +88,12 @@ export interface IBreedListProps {
 }
 
 export interface IFavoritesActionsProps {
-  favorites: string[]; 
+  // favorites: string[]; 
   generateMatch: () => void;
-  setFavorites: (favorites: string[]) => void;
+  // setFavorites: (favorites: string[]) => void;
+}
+
+export interface IUser {
+  name: string;
+  email: string;
 }
