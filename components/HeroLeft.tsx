@@ -1,12 +1,9 @@
 import { motion } from "framer-motion";
 import { PawPrint } from "lucide-react";
-import { IUser } from "@/types";
+import { HeroLeftProps } from "@/types";
 import { useRouter } from "next/navigation";
 
-interface HeroLeftProps {
-  user: IUser | null;
-  setLoginModalOpen: (open: boolean) => void;
-}
+
 
 const HeroLeft = ({ user, setLoginModalOpen }: HeroLeftProps) => {
   const router = useRouter();

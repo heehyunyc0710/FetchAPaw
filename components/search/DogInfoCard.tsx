@@ -20,7 +20,7 @@ const DogInfoCard = ({ dog }: { dog: IDog }) => {
   
   return (
     <div>
-      <div className="relative w-full h-48 z-0">
+      <div className="relative w-full md:h-56 z-0 h-96">
         <Image
           src={dog.img}
           alt={dog.name}

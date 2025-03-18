@@ -30,7 +30,7 @@ const LocationFilter = ({
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className="min-w-full bg-white "
+          className="min-w-full  bg-white "
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();
@@ -46,7 +46,7 @@ const LocationFilter = ({
                 const value = e.target.value;
                 const capitalizedValue = value
                   .split(" ") 
-                  .map((word) => word.charAt(0).toUpperCase() + word.slice(1)) 
+                  .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) 
                   .join(" "); 
                 setCity(capitalizedValue); 
               }}

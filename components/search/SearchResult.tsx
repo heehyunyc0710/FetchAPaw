@@ -58,21 +58,21 @@ const SearchResult = ({ loading }: { loading: boolean }) => {
             </>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 min-h-[500px]">
-              {dogs.sort((a, b) => a.breed.localeCompare(b.breed)).map((dog, index) => (
+              {dogs.length && dogs.sort((a, b) => a.breed.localeCompare(b.breed)).map((dog, index) => (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.5, delay: 0.5 }}
                   key={index}
                   onClick={() => handleViewDog(dog.id)}
-                  className="dog-card relative bg-white p-6 rounded-lg border border-transparent hover:shadow-lg transition-all duration-300 cursor-pointer"
+                  className="border border-zinc-500 shadow-lg dog-card relative bg-white p-6 rounded-lg  hover:shadow-lg transition-all duration-300 cursor-pointer"
                 >
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       toggleFavorite(dog.id);
                     }}
-                    className="absolute top-2 right-2 bg-black/90 border border-white/90 rounded-full p-2 cursor-pointer transition-all duration-300 z-10   "
+                    className="absolute top-2 right-2 bg-black/90 border-2 border-white/90 rounded-full p-2 cursor-pointer transition-all duration-300 z-10   "
                   >
                     <Heart
                       className={`hover:text-red-500 fill-current z-5 ${

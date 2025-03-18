@@ -11,7 +11,6 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 const Search = () => {
-
   const {
     setDogs,
     size,
@@ -33,7 +32,11 @@ const Search = () => {
     const getBreeds = async () => {
       try {
         const breeds = await fetchDogBreeds();
-        setBreeds(breeds.sort((a: string, b: string) => a.localeCompare(b)));
+        if (breeds && breeds?.length > 0) {
+          setBreeds(breeds.sort((a: string, b: string) => a.localeCompare(b)));
+        } else {
+          setBreeds([]);
+        }
       } catch (error) {
         console.error("Error fetching breeds:", error);
       }
@@ -44,7 +47,7 @@ const Search = () => {
 
   // function to get dogs by ids and update the dogs state
   const fetchDogsByIds = async (resultIds: string[]) => {
-    if (resultIds.length > 0) {
+    if (resultIds?.length > 0) {
       const dogsResponse = await fetchDogs({
         dogIds: resultIds,
       });
@@ -125,7 +128,6 @@ const Search = () => {
         </div>
         {/* filter bar */}
         <FilterBar loading={loading} searchDogs={searchDogs} />
-   
 
         {/* match and clear favorites */}
         {searchResults && (
@@ -143,7 +145,8 @@ const Search = () => {
 
       {/* Dog results grid */}
       <SearchResult loading={loading} />
-
+      
+      {/* dogmatch dialog */}
       {!loading && matchResult && <MatchDialog />}
     </div>
   );

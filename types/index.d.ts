@@ -7,6 +7,39 @@ export interface IDog {
   breed: string;
 }
 
+interface DogSearchContextProps {
+  dogs: IDog[];
+  setDogs: React.Dispatch<React.SetStateAction<IDog[]>>;
+
+  favorites: string[];
+  setFavorites: React.Dispatch<React.SetStateAction<string[]>>;
+  size: string;
+  setSize: React.Dispatch<React.SetStateAction<string>>;
+  sort: string;
+  setSort: React.Dispatch<React.SetStateAction<string>>;
+  from: number;
+  setFrom: React.Dispatch<React.SetStateAction<number>>;
+  city: string;
+  setCity: React.Dispatch<React.SetStateAction<string>>;
+  state: string;
+  setState: React.Dispatch<React.SetStateAction<string>>;
+  ageMin: string;
+  setAgeMin: React.Dispatch<React.SetStateAction<string>>;
+  ageMax: string;
+  setAgeMax: React.Dispatch<React.SetStateAction<string>>;
+  breeds: string[];
+  setBreeds: React.Dispatch<React.SetStateAction<string[]>>;
+  zipCodes: string;
+  setZipCodes: React.Dispatch<React.SetStateAction<string>>;
+  selectedBreeds: string[];
+  setSelectedBreeds: React.Dispatch<React.SetStateAction<string[]>>;
+  searchResults: ISearchResults | null;
+  setSearchResults: React.Dispatch<React.SetStateAction<ISearchResults | null>>;
+  matchResult: IDog | null;
+  setMatchResult: React.Dispatch<React.SetStateAction<IDog | null>>;
+}
+
+
 export interface ISearchResults {
   resultIds: string[];
   total: number;
@@ -96,4 +129,9 @@ export interface IFavoritesActionsProps {
 export interface IUser {
   name: string;
   email: string;
+}
+
+export interface HeroLeftProps {
+  user: IUser | null;
+  setLoginModalOpen: (open: boolean) => void;
 }

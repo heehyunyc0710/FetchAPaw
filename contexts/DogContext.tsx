@@ -1,38 +1,7 @@
 "use client";
-import { IDog, ISearchResults } from "@/types";
+import { DogSearchContextProps, IDog, ISearchResults } from "@/types";
 import { createContext, useContext, useState, useMemo } from "react";
 
-interface DogSearchContextProps {
-  dogs: IDog[];
-  setDogs: React.Dispatch<React.SetStateAction<IDog[]>>;
-
-  favorites: string[];
-  setFavorites: React.Dispatch<React.SetStateAction<string[]>>;
-  size: string;
-  setSize: React.Dispatch<React.SetStateAction<string>>;
-  sort: string;
-  setSort: React.Dispatch<React.SetStateAction<string>>;
-  from: number;
-  setFrom: React.Dispatch<React.SetStateAction<number>>;
-  city: string;
-  setCity: React.Dispatch<React.SetStateAction<string>>;
-  state: string;
-  setState: React.Dispatch<React.SetStateAction<string>>;
-  ageMin: string;
-  setAgeMin: React.Dispatch<React.SetStateAction<string>>;
-  ageMax: string;
-  setAgeMax: React.Dispatch<React.SetStateAction<string>>;
-  breeds: string[];
-  setBreeds: React.Dispatch<React.SetStateAction<string[]>>;
-  zipCodes: string;
-  setZipCodes: React.Dispatch<React.SetStateAction<string>>;
-  selectedBreeds: string[];
-  setSelectedBreeds: React.Dispatch<React.SetStateAction<string[]>>;
-  searchResults: ISearchResults | null;
-  setSearchResults: React.Dispatch<React.SetStateAction<ISearchResults | null>>;
-  matchResult: IDog | null;
-  setMatchResult: React.Dispatch<React.SetStateAction<IDog | null>>;
-}
 
 const DogSearchContext = createContext<DogSearchContextProps | undefined>(
   undefined

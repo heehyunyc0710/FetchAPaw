@@ -36,7 +36,7 @@ const Navbar: React.FC = () => {
       transition={{ duration: 0.5, delay: 0.5 }}
       className="container mx-auto mt-5 py-8 px-4 md:px-0 "
     >
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0">
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-4 md:gap-2">
         {/* Logo */}
         <div className="flex items-center">
           <Link href="/" className="flex items-center">
