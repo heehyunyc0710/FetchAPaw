@@ -32,7 +32,7 @@ const LocationFilter = () => {
   // Fetch locations when debounced values change
   useEffect(() => {
     setLocationObjects([]);
-    
+
     const fetchLocations = async () => {
       if (!debouncedCity && !debouncedState) return;
 
@@ -65,7 +65,6 @@ const LocationFilter = () => {
     setZipCodes("");
     setLocationObjects([]);
   }, []);
-
 
   return (
     <div>
@@ -129,16 +128,16 @@ const LocationFilter = () => {
                           }}
                         >
                           <div className="flex items-center">
-                          <Check
+                            <Check
                               className={cn(
                                 "mr-2",
                                 location.city === city
                                   ? "opacity-100"
                                   : "opacity-0"
                               )}
-                            /> {location.city}
+                            />{" "}
+                            {location.city}
                           </div>
-                       
                         </CommandItem>
                       ))}
                   </CommandGroup>
@@ -148,7 +147,7 @@ const LocationFilter = () => {
             <Command className="w-full">
               <CommandInput
                 value={state}
-                onValueChange={setState}
+                onValueChange={(value) => setState(value.toUpperCase())}
                 placeholder="State"
                 className="w-full"
               />
@@ -171,23 +170,24 @@ const LocationFilter = () => {
                           key={`state-${location.state}`}
                           value={location.state}
                           className={`hover:bg-yellow-200 cursor-pointer ${
-                            location.state === state ? "bg-yellow-200" : ""
+                            location.state === state
+                              ? "bg-yellow-200"
+                              : ""
                           }`}
                           onSelect={() => {
                             setState(location.state);
                           }}
                         >
                           <div className="flex items-center">
-                          <Check
+                            <Check
                               className={cn(
                                 "mr-2",
                                 location.state === state
                                   ? "opacity-100"
                                   : "opacity-0"
                               )}
-                            /> 
-                      
-                          {location.state}
+                            />
+                            {location.state}
                           </div>
                         </CommandItem>
                       ))}
