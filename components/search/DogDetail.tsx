@@ -4,15 +4,18 @@ import { CakeIcon, Dna, Dog as DogIcon, MapPin } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Map } from "../Map";
 import Image from "next/image";
-
+import handleError from "@/utils/handleError";
 
 const DogDetail = ({ dog }: { dog: IDog }) => {
   const [location, setLocation] = useState<ILocation | null>(null);
   useEffect(() => {
     const fetchLocation = async () => {
-      const response = await fetchDogLocation([dog.zip_code]);
-      console.log("response", response);
-      setLocation(response[0]);
+      try {
+        const response = await fetchDogLocation([dog.zip_code]);
+        setLocation(response[0]);
+      } catch (error) {
+        handleError(error);
+      }
     };
     fetchLocation();
   }, [dog]);

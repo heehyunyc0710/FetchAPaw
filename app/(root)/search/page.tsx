@@ -1,12 +1,13 @@
 "use client";
-import FavoritesActions from "@/components/search/match/FavoritesActions";
 import FilterBar from "@/components/search/filter/FilterBar";
+import FavoritesActions from "@/components/search/match/FavoritesActions";
 import { MatchDialog } from "@/components/search/match/MatchDialog";
 import SearchResult from "@/components/search/SearchResult";
 import SortBy from "@/components/search/SortBy";
 import ViewBySize from "@/components/search/ViewBySize";
 import { useDogSearch } from "@/contexts/DogContext";
 import { fetchDogBreeds, fetchDogs, handleDogSearch } from "@/utils/getData";
+import handleError from "@/utils/handleError";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
@@ -38,7 +39,7 @@ const Search = () => {
           setBreeds([]);
         }
       } catch (error) {
-        console.error("Error fetching breeds:", error);
+        handleError(error);
       }
     };
     getBreeds();
@@ -48,10 +49,14 @@ const Search = () => {
   // function to get dogs by ids and update the dogs state
   const fetchDogsByIds = async (resultIds: string[]) => {
     if (resultIds?.length > 0) {
-      const dogsResponse = await fetchDogs({
-        dogIds: resultIds,
-      });
-      setDogs(dogsResponse);
+      try {
+        const dogsResponse = await fetchDogs({
+          dogIds: resultIds,
+        });
+        setDogs(dogsResponse);
+      } catch (error) {
+        handleError(error);
+      }
     } else {
       setDogs([]);
     }
@@ -78,7 +83,7 @@ const Search = () => {
           params.append("zipCodes", zip.trim());
         });
       }
-
+      console.log("zipCodes???", zipCodes);
       if (ageMin) params.append("ageMin", ageMin);
       if (ageMax) params.append("ageMax", ageMax);
 
@@ -87,7 +92,7 @@ const Search = () => {
 
       fetchDogsByIds(searchResponse.resultIds);
     } catch (error) {
-      console.error("Error searching dogs:", error);
+      handleError(error);
     } finally {
       setLoading(false);
     }
@@ -102,11 +107,14 @@ const Search = () => {
   useEffect(() => {
     const fetchAllDogs = async () => {
       const params = new URLSearchParams();
+      try {
+        const response = await handleDogSearch(params.toString());
+        setSearchResults(response);
 
-      const response = await handleDogSearch(params.toString());
-      setSearchResults(response);
-
-      fetchDogsByIds(response?.resultIds);
+        fetchDogsByIds(response?.resultIds);
+      } catch (error) {
+        handleError(error);
+      }
     };
     fetchAllDogs();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -145,7 +153,7 @@ const Search = () => {
 
       {/* Dog results grid */}
       <SearchResult loading={loading} />
-      
+
       {/* dogmatch dialog */}
       {!loading && matchResult && <MatchDialog />}
     </div>

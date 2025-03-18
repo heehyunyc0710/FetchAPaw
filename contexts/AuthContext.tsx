@@ -7,7 +7,7 @@ import {
   useCallback,
 } from "react";
 import axios from "axios";
-
+import handleError from "@/utils/handleError";
 import { useRouter } from "next/navigation";
 import { IAuthContext, IUser } from "@/types";
 
@@ -70,8 +70,6 @@ export const AuthContextProvider = ({
         }
       );
 
-      console.log("Login response:", response.status, response.data);
-
       if (response.status === 200) {
         const userData = {
           name: username,
@@ -86,7 +84,7 @@ export const AuthContextProvider = ({
         console.error(`Login failed: ${response.data.error}`);
       }
     } catch (error) {
-      console.error("Login error:", error);
+      handleError(error);
     }
   };
 
@@ -106,7 +104,7 @@ export const AuthContextProvider = ({
         console.error(`Logout failed: ${response.data.error}`);
       }
     } catch (error) {
-      console.error("Logout error:", error);
+      handleError(error);
     }
   };
 

@@ -1,13 +1,10 @@
-import { ILocation, ILocationSearchParams } from "@/types";
 import { useEffect, useState } from "react";
-import { searchLocations } from "../../../utils/getData";
 import BreedList from "./BreedFilter";
 
 import { useDogSearch } from "@/contexts/DogContext";
 import AgeFilter from "./AgeFilter";
 import FilterActionButtons from "./FilterActionButtons";
 import LocationFilter from "./LocationFilter";
-
 const FilterBar = ({
   loading,
   searchDogs,
@@ -21,10 +18,10 @@ const FilterBar = ({
     setSelectedBreeds,
     city,
     state,
-    zipCodes,
+
     setZipCodes,
   } = useDogSearch();
-  const [open, setOpen] = useState(false);
+
   const [clearFiltersClicked, setClearFiltersClicked] = useState(false);
 
   useEffect(() => {
@@ -35,37 +32,7 @@ const FilterBar = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clearFiltersClicked]);
 
-  useEffect(() => {
-    const fetchLocations = async (zipCodes: string) => {
-      if (!city && !state) return;
-      setZipCodes("");
 
-      try {
-        const params: ILocationSearchParams = {};
-        if (city) params.city = city;
-        if (state) params.states = [state];
-
-        const response = await searchLocations(params);
-        console.log("response000", response);
-
-        if (response.results.length > 0) {
-          const zipCodesResponse = response.results
-            .map((location: ILocation) => location.zip_code)
-            .join(",");
-          if (zipCodes) {
-            setZipCodes(zipCodes);
-          } else {
-            setZipCodes(zipCodesResponse);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching locations:", error);
-      }
-    };
-
-    if (!open) fetchLocations(zipCodes);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [city, state, open]);
 
   useEffect(() => {
     if (!city && !state) setZipCodes("");
@@ -94,7 +61,7 @@ const FilterBar = ({
       </div>
 
       {/* location filter */}
-      <LocationFilter open={open} setOpen={setOpen} />
+      <LocationFilter   />
 
       {/* Age range filters */}
       <AgeFilter loading={loading} />
