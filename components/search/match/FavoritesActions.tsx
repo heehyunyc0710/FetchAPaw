@@ -7,6 +7,7 @@ const FavoritesActions = () => {
   // generateMatch,
   
   const { setMatchResult } = useDogSearch();
+  
   const generateMatch = async () => {
     try {
       const response = await fetchDogMatch({ favorites });
@@ -33,7 +34,7 @@ const FavoritesActions = () => {
                 : "cursor-pointer"
             }`}
           >
-            View Match
+            Generate Pawfect Match
           </button>
           <button
             onClick={() => setFavorites([])}
