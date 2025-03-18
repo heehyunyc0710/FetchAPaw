@@ -1,6 +1,6 @@
 import { useDogSearch } from "@/contexts/DogContext";
 import { fetchDogMatch, fetchDogs } from "@/utils/getData";
-
+import handleError from "@/utils/handleError";
 const FavoritesActions = () => {
   // favorites,
   // setFavorites,
@@ -16,7 +16,7 @@ const FavoritesActions = () => {
 
       setMatchResult(matchResponse[0]);
     } catch (error) {
-      console.error("Error generating match:", error);
+      handleError(error);
     }
   };
   const { favorites, setFavorites } = useDogSearch();

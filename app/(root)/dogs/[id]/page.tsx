@@ -4,6 +4,7 @@ import Loader from "@/components/Loader";
 import { useDogSearch } from "@/contexts/DogContext";
 import { IDog } from "@/types";
 import { fetchDogs } from "@/utils/getData";
+import handleError from "@/utils/handleError";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -13,6 +14,7 @@ const DogDetailPage = () => {
   const [dog, setDog] = useState<IDog | null>(null);
   const [loading, setLoading] = useState(true);
   const { dogs } = useDogSearch();
+  
 
   useEffect(() => {
     const fetchDogData = async () => {
@@ -32,7 +34,7 @@ const DogDetailPage = () => {
           console.error("Dog not found");
         }
       } catch (error) {
-        console.error("Error fetching dog:", error);
+        handleError(error);
       } finally {
         setLoading(false);
       }
