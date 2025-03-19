@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
-import { toast } from "sonner";
+import { customToast } from "@/utils/handleError";
 
 export function LoginModal({
   loginModalOpen,
@@ -33,13 +33,8 @@ export function LoginModal({
       return;
     }
     await login(username, email);
-    toast("Login successful", {
-      description: "Welcome back!",
-      action: {
-        label: "Dismiss",
-        onClick: () => console.log("Undo"),
-      },
-    });
+    customToast("Login successful", "Welcome back!", "success");
+  
 
     setLoginModalOpen(false);
     // console.log(res)

@@ -1,25 +1,24 @@
+import { Button } from "@/components/ui/button";
 import {
   Command,
-  CommandInput,
   CommandGroup,
+  CommandInput,
   CommandItem,
 } from "@/components/ui/command";
 import CustomCommandList from "@/components/ui/CustomCommandList";
-import { ILocation, ILocationSearchParams } from "@/types";
-import { useDogSearch } from "@/contexts/DogContext";
-import { useEffect, useState } from "react";
-import { searchLocations } from "@/utils/getData";
-import handleError from "@/utils/handleError";
-import { useDebounce } from "@/utils/hooks/useDebounce";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useDogSearch } from "@/contexts/DogContext";
 import { cn } from "@/lib/utils";
-import { toast } from "sonner";
+import { ILocation, ILocationSearchParams } from "@/types";
+import { searchLocations } from "@/utils/getData";
+import handleError, { customToast } from "@/utils/handleError";
+import { useDebounce } from "@/utils/hooks/useDebounce";
+import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
 const LocationFilter = () => {
   const {
     city,
@@ -51,18 +50,17 @@ const LocationFilter = () => {
           debouncedState.length &&
           (debouncedState.length !== 2 || !debouncedState.match(/^[A-Z]+$/))
         ) {
-          toast("Invalid state!", {
-            description: "Please enter a valid state.",
-          });
+          
+          customToast("Invalid state!", "Please enter a valid state.", "error");
           return;
         }
         if (debouncedCity.length && !debouncedCity.match(/^[A-Z]+$/)) {
-          toast("Invalid city!", {
-            description: "Please enter a valid city.",
-          });
+
+          customToast("Invalid city!", "Please enter a valid city.", "error");
+        
           return;
         }
-        
+
         const params: ILocationSearchParams = {};
         if (debouncedCity) params.city = debouncedCity;
         if (debouncedState) params.states = [debouncedState];
@@ -234,7 +232,13 @@ const LocationFilter = () => {
                 <Command className="w-full">
                   <CommandInput
                     value={zipCodes}
-                    onValueChange={setZipCodes}
+                    onValueChange={(value) => {
+                      if (value.length > 0 && !value.match(/^[0-9]+$/)) {
+                        customToast("Invalid zip code!", "Please enter a valid zip code.", "error");
+                        return;
+                      }
+                      setZipCodes(value);
+                    }}
                     placeholder="Comma separated ZIP codes"
                     className="w-full placeholder:text-xs"
                   />
