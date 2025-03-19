@@ -27,6 +27,7 @@ export const DogContextProvider = ({
     const [searchResults, setSearchResults] = useState<ISearchResults | null>(null);
     const [matchResult, setMatchResult] = useState<IDog | null>(null);
     const [favoritedDogs, setFavoritedDogs] = useState<IDog[]>([]);
+    const [zipCodeLoading, setZipCodeLoading] = useState<boolean>(false);
   const value = useMemo(
     () => ({
       dogs,
@@ -59,6 +60,8 @@ export const DogContextProvider = ({
       setMatchResult,
       favoritedDogs,
       setFavoritedDogs,
+      zipCodeLoading,
+      setZipCodeLoading,
     }),
     [
       dogs,
@@ -79,6 +82,8 @@ export const DogContextProvider = ({
       setMatchResult,
       favoritedDogs,
       setFavoritedDogs,
+      zipCodeLoading,
+      setZipCodeLoading,
     ]
   );
 

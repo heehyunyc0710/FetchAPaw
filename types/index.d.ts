@@ -39,6 +39,8 @@ interface DogSearchContextProps {
   setMatchResult: React.Dispatch<React.SetStateAction<IDog | null>>;
   favoritedDogs: IDog[];
   setFavoritedDogs: React.Dispatch<React.SetStateAction<IDog[]>>;
+  zipCodeLoading: boolean;
+  setZipCodeLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface ISearchResults {
