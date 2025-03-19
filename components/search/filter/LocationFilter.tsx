@@ -48,13 +48,13 @@ const LocationFilter = () => {
         setZipCodeLoading(true);
         if (
           debouncedState.length &&
-          (debouncedState.length !== 2 || !debouncedState.match(/^[A-Z]+$/))
+          (debouncedState.length !== 2 || !debouncedState.match(/^[A-Za-z ]+$/))
         ) {
           
           customToast("Invalid state!", "Please enter a valid state.", "error");
           return;
         }
-        if (debouncedCity.length && !debouncedCity.match(/^[A-Z]+$/)) {
+        if (debouncedCity.length && !debouncedCity.match(/^[A-Za-z ]+$/)) {
 
           customToast("Invalid city!", "Please enter a valid city.", "error");
         
