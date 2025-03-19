@@ -37,6 +37,8 @@ interface DogSearchContextProps {
   setSearchResults: React.Dispatch<React.SetStateAction<ISearchResults | null>>;
   matchResult: IDog | null;
   setMatchResult: React.Dispatch<React.SetStateAction<IDog | null>>;
+  favoritedDogs: IDog[];
+  setFavoritedDogs: React.Dispatch<React.SetStateAction<IDog[]>>;
 }
 
 

@@ -24,11 +24,11 @@ const SortBy = () => {
   };
 
   return (
-    <div className="flex gap-2 items-center mr-2">
+    <div className="flex-1 flex gap-2 items-center">
       <Select value={sort} onValueChange={handleSortValueChange}>
         <SelectTrigger className="bg-white border-zinc-600 rounded h-[40px] px-2 cursor-pointer">
-          <p className="text-sm">Sort by</p>
-          <p>{sortByKey || "Select"}</p>
+          <p className="text-xs md:text-sm">Sort by</p>
+          <p className="text-xs md:text-sm">{sortByKey || "Select"}</p>
         </SelectTrigger>
         <SelectContent className="bg-white border-zinc-600">
           {sortingOptions.map((option) => (

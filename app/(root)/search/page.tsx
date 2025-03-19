@@ -71,6 +71,7 @@ const Search = () => {
       params.set("sort", sort);
       params.set("from", from.toString());
       params.set("size", size);
+      console.log("sort", sort);
 
       if (selectedBreeds.length > 0) {
         selectedBreeds.forEach((breed) => {
@@ -83,7 +84,7 @@ const Search = () => {
           params.append("zipCodes", zip.trim());
         });
       }
-      console.log("zipCodes???", zipCodes);
+
       if (ageMin) params.append("ageMin", ageMin);
       if (ageMax) params.append("ageMax", ageMax);
 
@@ -139,9 +140,9 @@ const Search = () => {
 
         {/* match and clear favorites */}
         {searchResults && (
-          <div className="flex gap-4 mb-6 items-center justify-between w-full">
+          <div className="flex flex-col sm:flex-row sm:gap-4 gap-2 mb-6 items-center justify-between w-full">
             <FavoritesActions />
-            <div className="flex gap-4 items-center">
+            <div className="flex flex-col sm:flex-row gap-4 items-end sm:items-center w-full sm:w-[fit-content]">
               {/* View by number of results per page */}
               <ViewBySize />
               {/* sort by button */}

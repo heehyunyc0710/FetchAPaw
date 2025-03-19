@@ -1,44 +1,31 @@
 import { useDogSearch } from "@/contexts/DogContext";
-import { fetchDogMatch, fetchDogs } from "@/utils/getData";
-import handleError from "@/utils/handleError";
+import { useState } from "react";
+import FavoriteDialog from "./FavoriteDialog";
 const FavoritesActions = () => {
-  // favorites,
-  // setFavorites,
-  // generateMatch,
-  
-  const { setMatchResult } = useDogSearch();
-  const generateMatch = async () => {
-    try {
-      const response = await fetchDogMatch({ favorites });
+  const { setFavoritedDogs, favorites, dogs, setFavorites } = useDogSearch();
+  const [favoriteDialogOpen, setFavoriteDialogOpen] = useState(false);
 
-      // Fetch matched dog details
-      const matchResponse = await fetchDogs({ dogIds: [response.match] });
-
-      setMatchResult(matchResponse[0]);
-    } catch (error) {
-      handleError(error);
-    }
-  };
-  const { favorites, setFavorites } = useDogSearch();
   return (
-    <div>
+    <div className="w-full sm:w-[fit-content]">
       {favorites?.length > 0 && (
-        <div>
+        <div className="flex items-center justify-center h-[40px]">
           <button
-            onClick={generateMatch}
+            onClick={() => {
+              setFavoriteDialogOpen(true);
+            }}
             disabled={favorites.length === 0}
-            className={`bg-orange-600 text-white px-4 py-2 rounded disabled:opacity-50 hover:shadow-lg ${
+            className={`h-[40px] flex-1 sm:ml-4 border bg-orange-600 text-white px-2 lg:px-4 py-2 rounded disabled:opacity-50 hover:shadow-lg text-sm lg:text-base ${
               favorites.length === 0
                 ? "opacity-50 cursor-not-allowed"
                 : "cursor-pointer"
             }`}
           >
-            View Match
+            View Favorites
           </button>
           <button
             onClick={() => setFavorites([])}
             disabled={favorites.length === 0}
-            className={`ml-4 bg-white/70 border border-orange-600 text-orange-600 px-4 py-2 rounded disabled:opacity-50 hover:shadow-lg ${
+            className={`h-[40px] flex-1 ml-4 bg-white/70 border border-orange-600 text-orange-600 px-2 lg:px-4 py-2 rounded disabled:opacity-50 hover:shadow-lg text-sm lg:text-base min-w-[fit-content]  ${
               favorites.length === 0
                 ? "opacity-50 cursor-not-allowed"
                 : "cursor-pointer"
@@ -47,6 +34,12 @@ const FavoritesActions = () => {
             Clear Favorites
           </button>
         </div>
+      )}
+      {favoriteDialogOpen && (
+        <FavoriteDialog
+          open={favoriteDialogOpen}
+          onOpenChange={() => setFavoriteDialogOpen(!favoriteDialogOpen)}
+        />
       )}
     </div>
   );

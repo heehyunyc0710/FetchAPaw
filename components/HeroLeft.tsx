@@ -21,7 +21,7 @@ const HeroLeft = ({ user, setLoginModalOpen }: HeroLeftProps) => {
         </h2>
       </div>
 
-      <div className="flex items-center gap-2 font-bold color-primary hover:scale-105 transition-all duration-400">
+      <div className="flex items-center gap-2 font-bold color-primary hover:scale-105 transition-all duration-400 mt-6">
         {!user && (
           <motion.p
             animate={{
