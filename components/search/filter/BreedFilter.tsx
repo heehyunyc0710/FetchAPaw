@@ -23,7 +23,7 @@ const BreedList: React.FC<IBreedListProps> = ({
   breeds,
   selectedBreeds,
   setSelectedBreeds,
-  handleSelectAll,
+  clearFilter,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -77,12 +77,12 @@ const BreedList: React.FC<IBreedListProps> = ({
             <CommandGroup className="w-full ">
               <CommandItem
                 value="select-all"
-                className="hover:bg-yellow-200 cursor-pointer"
+                className="cursor-pointer"
                 onSelect={() => {
-                  handleSelectAll(selectedBreeds.length !== breeds.length);
+                  clearFilter();
                 }}
               >
-                <div className="flex items-center">
+                <div className="flex items-center bg-orange-300 hover:shadow-lg hover:bg-orange-400 w-full p-2 rounded-md">
                   <Check
                     className={cn(
                       "mr-2",
@@ -91,7 +91,7 @@ const BreedList: React.FC<IBreedListProps> = ({
                         : "opacity-0"
                     )}
                   />
-                  Select All
+                  Clear All
                 </div>
               </CommandItem>
               {breeds.length > 0 &&
