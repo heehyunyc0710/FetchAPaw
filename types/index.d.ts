@@ -41,7 +41,6 @@ interface DogSearchContextProps {
   setFavoritedDogs: React.Dispatch<React.SetStateAction<IDog[]>>;
 }
 
-
 export interface ISearchResults {
   resultIds: string[];
   total: number;
@@ -79,7 +78,6 @@ export interface ILocationSearchParams {
   from?: number;
 }
 
-
 export interface IFilterBarProps {
   breeds: string[];
   selectedBreeds: string[];
@@ -99,13 +97,10 @@ export interface IFilterBarProps {
 }
 
 export interface IMatchDialogProps {
-
   onClose: () => void;
 }
 
-
-
-export interface ISearchResultHeaderProps{
+export interface ISearchResultHeaderProps {
   city: string;
   state: string;
   selectedBreeds: string[];
@@ -119,11 +114,11 @@ export interface IBreedListProps {
   breeds: string[];
   selectedBreeds: string[];
   setSelectedBreeds: (breeds: string[]) => void;
-  handleSelectAll: (checked: boolean) => void;
+  clearFilter: () => void;
 }
 
 export interface IFavoritesActionsProps {
-  // favorites: string[]; 
+  // favorites: string[];
   generateMatch: () => void;
   // setFavorites: (favorites: string[]) => void;
 }

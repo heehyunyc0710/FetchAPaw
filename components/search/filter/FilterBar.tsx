@@ -32,19 +32,15 @@ const FilterBar = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clearFiltersClicked]);
 
-
-
   useEffect(() => {
     if (!city && !state) setZipCodes("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [city, state]);
 
-  const handleSelectAll = (checked: boolean) => {
-    if (checked) {
-      setSelectedBreeds(breeds);
-    } else {
+  const clearFilter = () => {
+   
       setSelectedBreeds([]);
-    }
+    
   };
 
   return (
@@ -56,12 +52,12 @@ const FilterBar = ({
           breeds={breeds}
           selectedBreeds={selectedBreeds}
           setSelectedBreeds={setSelectedBreeds}
-          handleSelectAll={handleSelectAll}
+          clearFilter={clearFilter}
         />
       </div>
 
       {/* location filter */}
-      <LocationFilter   />
+      <LocationFilter />
 
       {/* Age range filters */}
       <AgeFilter loading={loading} />
