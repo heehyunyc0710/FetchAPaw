@@ -19,7 +19,7 @@ import {
 import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-
+import { toast } from "sonner";
 const LocationFilter = () => {
   const {
     city,
@@ -36,7 +36,7 @@ const LocationFilter = () => {
   const debouncedState = useDebounce(state, 500);
   const [locationObjects, setLocationObjects] = useState<ILocation[]>([]);
 
-  const [open, setOpen] = useState(false);
+  const [locationFilterOpen, setLocationFilterOpen] = useState(false);
 
   // Fetch locations when debounced values change
   useEffect(() => {
@@ -47,6 +47,22 @@ const LocationFilter = () => {
 
       try {
         setZipCodeLoading(true);
+        if (
+          debouncedState.length &&
+          (debouncedState.length !== 2 || !debouncedState.match(/^[A-Z]+$/))
+        ) {
+          toast("Invalid state!", {
+            description: "Please enter a valid state.",
+          });
+          return;
+        }
+        if (debouncedCity.length && !debouncedCity.match(/^[A-Z]+$/)) {
+          toast("Invalid city!", {
+            description: "Please enter a valid city.",
+          });
+          return;
+        }
+        
         const params: ILocationSearchParams = {};
         if (debouncedCity) params.city = debouncedCity;
         if (debouncedState) params.states = [debouncedState];
@@ -94,7 +110,7 @@ const LocationFilter = () => {
             <Button
               variant="outline"
               role="combobox"
-              aria-expanded={open}
+              aria-expanded={locationFilterOpen}
               className="w-full justify-between border-zinc-600 bg-white/70 h-10 shadow-lg"
             >
               {city && state ? `${city}, ${state}` : "Select location..."}
@@ -106,15 +122,14 @@ const LocationFilter = () => {
               if (e.key === "Enter") {
                 e.preventDefault();
                 e.stopPropagation();
-                setOpen(false);
+                setLocationFilterOpen(false);
               }
             }}
             className="min-w-full bg-white"
           >
             {zipCodeLoading ? (
               <div className="flex w-full items-center justify-center text-sm">
-                <Loader2  className="animate-spin mr-2"/>{" "}
-                Finding locations...
+                <Loader2 className="animate-spin mr-2" /> Finding locations...
               </div>
             ) : (
               <>
@@ -171,7 +186,7 @@ const LocationFilter = () => {
                   <CommandInput
                     value={state}
                     onValueChange={(value) => setState(value.toUpperCase())}
-                    placeholder="State"
+                    placeholder="2-letter State"
                     className="w-full placeholder:text-xs"
                   />
                   <CustomCommandList className="max-h-[200px] overflow-y-auto w-full">
@@ -220,7 +235,7 @@ const LocationFilter = () => {
                   <CommandInput
                     value={zipCodes}
                     onValueChange={setZipCodes}
-                    placeholder="ZIP: max 25 Comma separated"
+                    placeholder="Comma separated ZIP codes"
                     className="w-full placeholder:text-xs"
                   />
                   <CustomCommandList className="max-h-[200px] overflow-y-auto w-full">

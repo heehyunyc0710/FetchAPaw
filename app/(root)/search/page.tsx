@@ -26,6 +26,8 @@ const Search = () => {
     searchResults,
     setSearchResults,
     matchResult,
+    city,
+    state,
   } = useDogSearch();
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -81,13 +83,25 @@ const Search = () => {
       }
 
       if (zipCodes) {
-        if (zipCodes.split(",").length > 25) {
-          toast("Maximum 25 zip codes allowed", {
-            description: "Please reduce the number of zip codes",
-          });
+        if (state && !city) {
+          toast("Too many zip codes!", {
+            description: "Please enter a city.",
+            action: {
+              label: "Dismiss",
+              onClick: () => console.log("Undo"),
+            },
+          }
+        );
           return;
         }
+        console.log("zipCodes", zipCodes.length);
         zipCodes.split(",").forEach((zip) => {
+          if (isNaN(Number(zip))) {
+            toast("Invalid zip code!", {
+              description: "Please enter a valid zip code.",
+            });
+            return;
+          }
           params.append("zipCodes", zip.trim());
         });
       }
