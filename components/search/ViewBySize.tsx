@@ -8,10 +8,10 @@ const sizeOptions = [10, 25, 50, 100];
 const ViewBySize = () => {
   const { size, setSize } = useDogSearch();
   return (
-    <div>
+    <div className="flex-1">
       <Select value={size} onValueChange={(value) => setSize(value)}>
         <SelectTrigger className="w-full p-2 border rounded h-[40px] border-zinc-600 shadow-md bg-white text-sm cursor-pointer">
-          <p className="text-sm">Viewing {size} results per page</p>
+          <p className="text-xs md:text-sm">Viewing {size} results</p>
         </SelectTrigger>
         <SelectContent className="bg-white border-zinc-600">
           {sizeOptions.map((option) => (

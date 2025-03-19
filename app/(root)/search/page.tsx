@@ -25,7 +25,6 @@ const Search = () => {
     searchResults,
     setSearchResults,
     matchResult,
-   
   } = useDogSearch();
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -141,9 +140,9 @@ const Search = () => {
 
         {/* match and clear favorites */}
         {searchResults && (
-          <div className="flex gap-4 mb-6 items-center justify-between w-full">
+          <div className="flex flex-col sm:flex-row sm:gap-4 gap-2 mb-6 items-center justify-between w-full">
             <FavoritesActions />
-            <div className="flex gap-4 items-center">
+            <div className="flex flex-col sm:flex-row gap-4 items-end sm:items-center w-full sm:w-[fit-content]">
               {/* View by number of results per page */}
               <ViewBySize />
               {/* sort by button */}
@@ -158,7 +157,6 @@ const Search = () => {
 
       {/* dogmatch dialog */}
       {!loading && matchResult && <MatchDialog />}
- 
     </div>
   );
 };
