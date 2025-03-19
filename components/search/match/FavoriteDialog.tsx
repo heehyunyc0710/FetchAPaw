@@ -78,7 +78,7 @@ const FavoriteDialog = ({
     <div className="p-4">
       <Dialog open={open && !loading} onOpenChange={onOpenChange}>
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-200">
-          <div className="relative bg-white rounded-lg max-w-[90vw] h-[90vh] overflow-hidden p-10">
+          <div className="relative bg-white rounded-lg w-[90vw] md:w-[60vw] h-[90vh] md:h-[60vh] overflow-hidden p-10">
             <button
               onClick={onClose}
               className="cursor-pointer absolute top-2 right-2 font-bold bg-transparent text-yellow-600 p-2 rounded hover:bg-gray-100 z-10"
@@ -100,7 +100,7 @@ const FavoriteDialog = ({
               Generate Pawfect Match
             </button>
 
-            <div className="overflow-y-auto max-h-[80vh] pb-8">
+            <div className="overflow-y-auto max-h-[40vh] pb-8">
               {favorites.length === 0 ? (
                 <p className="text-center">No favorite dogs found.</p>
               ) : (
