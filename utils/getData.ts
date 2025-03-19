@@ -55,7 +55,7 @@ export const handleDogSearch = async (params: string) => {
       `${process.env.NEXT_PUBLIC_API_URL}/dogs/search?${params}`,
       { withCredentials: true }
     );
-    
+    console.log("response", response.data);
     return response.data;
   } catch (error) {
     console.error("Error searching dogs:", error);

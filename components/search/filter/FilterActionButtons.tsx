@@ -30,6 +30,7 @@ const FilterActionButtons = ({
           setState("");
           setZipCodes("");
           setClearFiltersClicked(true);
+          
         }}
         className="flex-1 bg-black hover:bg-black/80 hover:transition-all hover:duration-300 text-white px-4 sm:px-1 py-2 rounded cursor-pointer hover:shadow-lg h-10 min-w-[fit-content]"
         disabled={loading}

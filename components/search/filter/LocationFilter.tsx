@@ -93,9 +93,9 @@ const LocationFilter = () => {
     setZipCodeLoading(false);
   };
 
-  useEffect(() => {
-    clearLocation();
-  }, []);
+  // useEffect(() => {
+  //   clearLocation();
+  // }, []);
 
   return (
     <div>
@@ -111,7 +111,7 @@ const LocationFilter = () => {
               aria-expanded={locationFilterOpen}
               className="w-full justify-between border-zinc-600 bg-white/70 h-10 shadow-lg"
             >
-              {city && state ? `${city}, ${state}` : "Select location..."}
+              {city && state ? `${city}, ${state}` : zipCodes ? zipCodes : "Select location..."}
               <ChevronsUpDown className="opacity-50" />
             </Button>
           </PopoverTrigger>
@@ -242,7 +242,7 @@ const LocationFilter = () => {
                     placeholder="Comma separated ZIP codes"
                     className="w-full placeholder:text-xs"
                   />
-                  <CustomCommandList className="max-h-[200px] overflow-y-auto w-full">
+                  {/* <CustomCommandList className="max-h-[200px] overflow-y-auto w-full">
                     {zipCodes.length > 0 && (
                       <CommandGroup className="w-full">
                         {zipCodes.split(",").map((zip) => (
@@ -259,7 +259,7 @@ const LocationFilter = () => {
                         ))}
                       </CommandGroup>
                     )}
-                  </CustomCommandList>
+                  </CustomCommandList> */}
                 </Command>
                 <button
                   className="mt-4 w-full bg-orange-300 cursor-pointer hover:bg-orange-400 p-2 rounded-md"

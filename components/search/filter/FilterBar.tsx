@@ -18,7 +18,7 @@ const FilterBar = ({
     setSelectedBreeds,
     city,
     state,
-
+    zipCodes,
     setZipCodes,
   } = useDogSearch();
 
@@ -33,9 +33,9 @@ const FilterBar = ({
   }, [clearFiltersClicked]);
 
   useEffect(() => {
-    if (!city && !state) setZipCodes("");
+    if (!city && !state && !zipCodes) setZipCodes("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [city, state]);
+  }, [city, state, zipCodes]);
 
   const clearFilter = () => {
    

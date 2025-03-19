@@ -55,6 +55,7 @@ const Search = () => {
         const dogsResponse = await fetchDogs({
           dogIds: resultIds,
         });
+        console.log("dogsResponse", dogsResponse);
         setDogs(dogsResponse);
       } catch (error) {
         handleError(error);
@@ -100,8 +101,9 @@ const Search = () => {
 
       if (ageMin) params.append("ageMin", ageMin);
       if (ageMax) params.append("ageMax", ageMax);
-
+      console.log("params", params.toString());
       const searchResponse = await handleDogSearch(params.toString());
+      console.log("searchResponse", searchResponse);
       setSearchResults(searchResponse);
 
       fetchDogsByIds(searchResponse.resultIds);
@@ -118,21 +120,21 @@ const Search = () => {
   }, [sort, from, size]);
 
   // load dogs when page loads
-  useEffect(() => {
-    const fetchAllDogs = async () => {
-      const params = new URLSearchParams();
-      try {
-        const response = await handleDogSearch(params.toString());
-        setSearchResults(response);
+  // useEffect(() => {
+  //   const fetchAllDogs = async () => {
+  //     const params = new URLSearchParams();
+  //     try {
+  //       const response = await handleDogSearch(params.toString());
+  //       setSearchResults(response);
 
-        fetchDogsByIds(response?.resultIds);
-      } catch (error) {
-        handleError(error);
-      }
-    };
-    fetchAllDogs();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  //       fetchDogsByIds(response?.resultIds);
+  //     } catch (error) {
+  //       handleError(error);
+  //     }
+  //   };
+  //   fetchAllDogs();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
