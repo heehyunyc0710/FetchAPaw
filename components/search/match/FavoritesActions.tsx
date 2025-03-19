@@ -2,7 +2,7 @@ import { useDogSearch } from "@/contexts/DogContext";
 import { useState } from "react";
 import FavoriteDialog from "./FavoriteDialog";
 const FavoritesActions = () => {
-  const { setFavoritedDogs, favorites, dogs, setFavorites } = useDogSearch();
+  const {  favorites, setFavorites } = useDogSearch();
   const [favoriteDialogOpen, setFavoriteDialogOpen] = useState(false);
 
   return (
