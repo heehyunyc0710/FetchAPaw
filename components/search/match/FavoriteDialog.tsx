@@ -7,7 +7,7 @@ import handleError from "@/utils/handleError";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import DogInfoCard from "../DogInfoCard";
-
+import { useRouter } from "next/navigation";
 const FavoriteDialog = ({
   open,
   onOpenChange,
@@ -15,6 +15,7 @@ const FavoriteDialog = ({
   open: boolean;
   onOpenChange: () => void;
 }) => {
+  const router = useRouter();
   const { favorites, favoritedDogs, setFavoritedDogs, setMatchResult } =
     useDogSearch();
   const [allDogs, setAllDogs] = useState<IDog[]>([]);
@@ -114,7 +115,13 @@ const FavoriteDialog = ({
                   }`}
                 >
                   {favoritedDogs.map((dog) => (
-                    <DogInfoCard key={dog.id} dog={dog} />
+                    <div
+                      className="cursor-pointer"
+                      key={dog.id}
+                      onClick={() => router.push(`/dogs/${dog.id}`)}
+                    >
+                      <DogInfoCard dog={dog} />
+                    </div>
                   ))}
                 </div>
               )}
