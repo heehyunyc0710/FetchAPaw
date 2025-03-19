@@ -82,14 +82,14 @@ export const fetchDogLocation = async (zipCodes: string[]) => {
 };
 
 export const searchLocations = async (params: ILocationSearchParams) => {
-  console.log("location params", params);
+  // console.log("location params", params);
   try {
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_API_URL}/locations/search`,
       params,
       { withCredentials: true }
     );
-    console.log("responseeeee", response);
+    // console.log("responseeeee", response);
     return response.data;
   } catch (error) {
     console.error("Error searching locations:", error);

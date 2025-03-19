@@ -73,7 +73,7 @@ const Search = () => {
       params.set("sort", sort);
       params.set("from", from.toString());
       params.set("size", size);
-      console.log("sort", sort);
+      // console.log("sort", sort);
 
       if (selectedBreeds.length > 0) {
         selectedBreeds.forEach((breed) => {
@@ -87,7 +87,7 @@ const Search = () => {
          
           return;
         }
-        console.log("zipCodes", zipCodes.length);
+        // console.log("zipCodes", zipCodes.length);
         zipCodes.split(",").forEach((zip) => {
           if (isNaN(Number(zip))) {
             customToast("Invalid zip code!", "Please enter a valid zip code.", "error");

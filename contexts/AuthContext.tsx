@@ -32,7 +32,7 @@ export const AuthContextProvider = ({
           parsedUser.expiresAt &&
           new Date().getTime() > parsedUser.expiresAt
         ) {
-          console.log("User session expired");
+        //   console.log("User session expired");
           setUser(null);
           localStorage.removeItem("user");
           router.push("/");
@@ -57,7 +57,7 @@ export const AuthContextProvider = ({
 
   const login = async (username: string, email: string) => {
     try {
-      console.log("Attempting login with:", username, email);
+    //   console.log("Attempting login with:", username, email);
 
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
