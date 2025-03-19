@@ -21,13 +21,21 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const LocationFilter = () => {
-  const { city, setCity, state, setState, zipCodes, setZipCodes, zipCodeLoading, setZipCodeLoading } =
-    useDogSearch();
+  const {
+    city,
+    setCity,
+    state,
+    setState,
+    zipCodes,
+    setZipCodes,
+    zipCodeLoading,
+    setZipCodeLoading,
+  } = useDogSearch();
 
   const debouncedCity = useDebounce(city, 500);
   const debouncedState = useDebounce(state, 500);
   const [locationObjects, setLocationObjects] = useState<ILocation[]>([]);
-  
+
   const [open, setOpen] = useState(false);
 
   // Fetch locations when debounced values change
@@ -63,12 +71,16 @@ const LocationFilter = () => {
     fetchLocations();
   }, [debouncedCity, debouncedState]);
 
-  useEffect(() => {
+  const clearLocation = () => {
     setCity("");
     setState("");
     setZipCodes("");
     setLocationObjects([]);
     setZipCodeLoading(false);
+  };
+
+  useEffect(() => {
+    clearLocation();
   }, []);
 
   return (
@@ -100,138 +112,144 @@ const LocationFilter = () => {
             className="min-w-full bg-white"
           >
             {zipCodeLoading ? (
-              <Loader2   className="animate-spin w-full items-center justify-center" />
+              <div className="flex w-full items-center justify-center text-sm">
+                <Loader2  className="animate-spin mr-2"/>{" "}
+                Finding locations...
+              </div>
             ) : (
               <>
-           
                 <Command className="w-full">
                   <CommandInput
                     value={city}
                     onValueChange={setCity}
                     placeholder="City"
-                    className="w-full text-xs"
-              />
-              <CustomCommandList className="max-h-[200px] overflow-y-auto w-full">
-                {locationObjects.length > 0 && (
-                  <CommandGroup className="w-full">
-                    {locationObjects
-                      .filter((location) =>
-                        location.city.toLowerCase().includes(city.toLowerCase())
-                      )
-                      .filter(
-                        (location, index, self) =>
-                          index ===
-                          self.findIndex((l) => l.city === location.city)
-                      )
-                      .map((location) => (
-                        <CommandItem
-                          key={`${location.city}-${location.state}-${location.zip_code}`}
-                          value={location.city}
-                          className={`hover:bg-yellow-200 cursor-pointer ${
-                            location.city === city ? "bg-yellow-200" : ""
-                          }`}
-                          onSelect={() => {
-                            setCity(location.city);
-                            // if (state === location.state) {
-                            //   setZipCodes(location.zip_code);
-                            // }
-                          }}
-                        >
-                          <div className="flex items-center">
-                            <Check
-                              className={cn(
-                                "mr-2",
-                                location.city === city
-                                  ? "opacity-100"
-                                  : "opacity-0"
-                              )}
-                            />{" "}
-                            {location.city}
-                          </div>
-                        </CommandItem>
-                      ))}
-                  </CommandGroup>
-                )}
-              </CustomCommandList>
-            </Command>
-            <Command className="w-full">
-              <CommandInput
-                value={state}
-                onValueChange={(value) => setState(value.toUpperCase())}
-                placeholder="State"
-                className="w-full text-xs"
-              />
-              <CustomCommandList className="max-h-[200px] overflow-y-auto w-full">
-                {locationObjects.length > 0 && (
-                  <CommandGroup className="w-full">
-                    {locationObjects
-                      .filter((location) =>
-                        location.state
-                          .toLowerCase()
-                          .includes(state.toLowerCase())
-                      )
-                      .filter(
-                        (location, index, self) =>
-                          index ===
-                          self.findIndex((l) => l.state === location.state)
-                      )
-                      .map((location) => (
-                        <CommandItem
-                          key={`state-${location.state}`}
-                          value={location.state}
-                          className={`hover:bg-yellow-200 cursor-pointer ${
-                            location.state === state
-                              ? "bg-yellow-200"
-                              : ""
-                          }`}
-                          onSelect={() => {
-                            setState(location.state);
-                          }}
-                        >
-                          <div className="flex items-center">
-                            <Check
-                              className={cn(
-                                "mr-2",
-                                location.state === state
-                                  ? "opacity-100"
-                                  : "opacity-0"
-                              )}
-                            />
-                            {location.state}
-                          </div>
-                        </CommandItem>
-                      ))}
-                  </CommandGroup>
-                )}
-              </CustomCommandList>
-            </Command>
-            <Command className="w-full">
-              <CommandInput
-                value={zipCodes}
-                onValueChange={setZipCodes}
-                placeholder="ZIP: max 25 Comma separated"
-                className="w-full text-xs"
-              />
-              <CustomCommandList className="max-h-[200px] overflow-y-auto w-full">
-                {zipCodes.length > 0 && (
-                  <CommandGroup className="w-full">
-                    {zipCodes.split(",").map((zip) => (
-                      <CommandItem
-                        key={`Zip code-${zip}`}
-                        value={zip}
-                        className="hover:bg-yellow-200 cursor-pointer"
-                        onSelect={() => {
-                          setZipCodes(zip);
-                        }}
-                      >
-                        <div className="flex items-center">{zip}</div>
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                )}
-              </CustomCommandList>
-            </Command>
-            </>)}
+                    className="w-full  placeholder:text-xs"
+                  />
+                  <CustomCommandList className="max-h-[200px] overflow-y-auto w-full">
+                    {locationObjects.length > 0 && (
+                      <CommandGroup className="w-full">
+                        {locationObjects
+                          .filter((location) =>
+                            location.city
+                              .toLowerCase()
+                              .includes(city.toLowerCase())
+                          )
+                          .filter(
+                            (location, index, self) =>
+                              index ===
+                              self.findIndex((l) => l.city === location.city)
+                          )
+                          .map((location) => (
+                            <CommandItem
+                              key={`${location.city}-${location.state}-${location.zip_code}`}
+                              value={location.city}
+                              className={`hover:bg-yellow-200 cursor-pointer ${
+                                location.city === city ? "bg-yellow-200" : ""
+                              }`}
+                              onSelect={() => {
+                                setCity(location.city);
+                              }}
+                            >
+                              <div className="flex items-center">
+                                <Check
+                                  className={cn(
+                                    "mr-2",
+                                    location.city === city
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                                  )}
+                                />{" "}
+                                {location.city}
+                              </div>
+                            </CommandItem>
+                          ))}
+                      </CommandGroup>
+                    )}
+                  </CustomCommandList>
+                </Command>
+                <Command className="w-full">
+                  <CommandInput
+                    value={state}
+                    onValueChange={(value) => setState(value.toUpperCase())}
+                    placeholder="State"
+                    className="w-full placeholder:text-xs"
+                  />
+                  <CustomCommandList className="max-h-[200px] overflow-y-auto w-full">
+                    {locationObjects.length > 0 && (
+                      <CommandGroup className="w-full">
+                        {locationObjects
+                          .filter((location) =>
+                            location.state
+                              .toLowerCase()
+                              .includes(state.toLowerCase())
+                          )
+                          .filter(
+                            (location, index, self) =>
+                              index ===
+                              self.findIndex((l) => l.state === location.state)
+                          )
+                          .map((location) => (
+                            <CommandItem
+                              key={`state-${location.state}`}
+                              value={location.state}
+                              className={`hover:bg-yellow-200 cursor-pointer ${
+                                location.state === state ? "bg-yellow-200" : ""
+                              }`}
+                              onSelect={() => {
+                                setState(location.state);
+                              }}
+                            >
+                              <div className="flex items-center">
+                                <Check
+                                  className={cn(
+                                    "mr-2",
+                                    location.state === state
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                                  )}
+                                />
+                                {location.state}
+                              </div>
+                            </CommandItem>
+                          ))}
+                      </CommandGroup>
+                    )}
+                  </CustomCommandList>
+                </Command>
+                <Command className="w-full">
+                  <CommandInput
+                    value={zipCodes}
+                    onValueChange={setZipCodes}
+                    placeholder="ZIP: max 25 Comma separated"
+                    className="w-full placeholder:text-xs"
+                  />
+                  <CustomCommandList className="max-h-[200px] overflow-y-auto w-full">
+                    {zipCodes.length > 0 && (
+                      <CommandGroup className="w-full">
+                        {zipCodes.split(",").map((zip) => (
+                          <CommandItem
+                            key={`Zip code-${zip}`}
+                            value={zip}
+                            className="hover:bg-yellow-200 cursor-pointer"
+                            onSelect={() => {
+                              setZipCodes(zip);
+                            }}
+                          >
+                            <div className="flex items-center">{zip}</div>
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    )}
+                  </CustomCommandList>
+                </Command>
+                <button
+                  className="mt-4 w-full bg-orange-300 cursor-pointer hover:bg-orange-400 p-2 rounded-md"
+                  onClick={clearLocation}
+                >
+                  Clear Location
+                </button>
+              </>
+            )}
           </PopoverContent>
         </Popover>
       </div>
