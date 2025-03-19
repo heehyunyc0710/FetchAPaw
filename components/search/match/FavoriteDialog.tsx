@@ -14,7 +14,6 @@ const FavoriteDialog = ({
   open: boolean;
   onOpenChange: () => void;
 }) => {
-
   const { favorites, favoritedDogs, setFavoritedDogs, setMatchResult } =
     useDogSearch();
   const [allDogs, setAllDogs] = useState([]);
@@ -44,10 +43,8 @@ const FavoriteDialog = ({
         params.set("sort", "breed:asc");
         params.set("size", "10000");
 
-        const response = await handleDogSearch(params.toString());
-        console.log("response.resultIds", response.resultIds);
         const dogsResponse = await fetchDogs({
-          dogIds: response.resultIds,
+          dogIds: favorites,
         });
         setAllDogs(dogsResponse);
       } catch (error) {
@@ -65,7 +62,7 @@ const FavoriteDialog = ({
       console.log("favorites??", favorites);
       console.log("allDogs???", allDogs);
       const favDogs = allDogs.filter((dog) => favorites.includes(dog.id));
-   
+
       setFavoritedDogs(favDogs);
     }
   }, [open, allDogs, favorites]);
