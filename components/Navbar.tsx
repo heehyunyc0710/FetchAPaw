@@ -1,16 +1,16 @@
 "use client";
 import { useAuth } from "@/contexts/AuthContext";
+import { customToast } from "@/utils/handleError";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
+import { AboutButton } from "./modals/about/AboutButton";
+import AboutModal from "./modals/about/AboutModal";
 import { LoginButton } from "./modals/auth/LoginButton";
 import { LoginModal } from "./modals/auth/LoginModal";
-import AboutModal from "./modals/about/AboutModal";
-import { AboutButton } from "./modals/about/AboutButton";
 import ContactModal from "./modals/ContactModal";
-import { useRouter, usePathname } from "next/navigation";
-import { toast } from "sonner";
 const Navbar: React.FC = () => {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [aboutModalOpen, setAboutModalOpen] = useState(false);
@@ -20,13 +20,8 @@ const Navbar: React.FC = () => {
   const currentPath = usePathname();
   const handleLogout = async () => {
     await logout();
-    toast("Logout successful", {
-      description: "See you next time!",
-      action: {
-        label: "Dismiss",
-        onClick: () => console.log("Undo"),
-      },
-    });
+    customToast("Logout successful", "See you next time!", "success");
+   
   };
 
   return (

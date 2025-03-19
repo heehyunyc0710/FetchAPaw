@@ -7,10 +7,9 @@ import SortBy from "@/components/search/SortBy";
 import ViewBySize from "@/components/search/ViewBySize";
 import { useDogSearch } from "@/contexts/DogContext";
 import { fetchDogBreeds, fetchDogs, handleDogSearch } from "@/utils/getData";
-import handleError from "@/utils/handleError";
+import handleError, { customToast } from "@/utils/handleError";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
 
 const Search = () => {
   const {
@@ -84,22 +83,15 @@ const Search = () => {
 
       if (zipCodes) {
         if (state && !city) {
-          toast("Too many zip codes!", {
-            description: "Please enter a city.",
-            action: {
-              label: "Dismiss",
-              onClick: () => console.log("Undo"),
-            },
-          }
-        );
+          customToast("Too many zip codes!", "Please enter a city.", "error");
+         
           return;
         }
         console.log("zipCodes", zipCodes.length);
         zipCodes.split(",").forEach((zip) => {
           if (isNaN(Number(zip))) {
-            toast("Invalid zip code!", {
-              description: "Please enter a valid zip code.",
-            });
+            customToast("Invalid zip code!", "Please enter a valid zip code.", "error");
+           
             return;
           }
           params.append("zipCodes", zip.trim());
