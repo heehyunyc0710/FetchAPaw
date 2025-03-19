@@ -10,6 +10,7 @@ import { fetchDogBreeds, fetchDogs, handleDogSearch } from "@/utils/getData";
 import handleError from "@/utils/handleError";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const Search = () => {
   const {
@@ -80,6 +81,12 @@ const Search = () => {
       }
 
       if (zipCodes) {
+        if (zipCodes.split(",").length > 25) {
+          toast("Maximum 25 zip codes allowed", {
+            description: "Please reduce the number of zip codes",
+          });
+          return;
+        }
         zipCodes.split(",").forEach((zip) => {
           params.append("zipCodes", zip.trim());
         });

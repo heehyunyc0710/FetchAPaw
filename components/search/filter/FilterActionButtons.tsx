@@ -17,6 +17,7 @@ const FilterActionButtons = ({
     setZipCodes,
     setCity,
     setState,
+    zipCodeLoading,
   } = useDogSearch();
   return (
     <div className="flex gap-2 items-end justify-end w-full pb-2">
@@ -37,8 +38,8 @@ const FilterActionButtons = ({
       </button>
       <button
         onClick={searchDogs}
-        className="flex-1 bg-orange-700 hover:bg-orange-600 hover:transition-all hover:duration-300 text-white px-4 sm:px-1 py-2 rounded cursor-pointer hover:shadow-lg h-10"
-        disabled={loading}
+        className="flex-1 bg-orange-700 hover:bg-orange-600 hover:transition-all hover:duration-300 text-white px-4 sm:px-1 py-2 rounded cursor-pointer hover:shadow-lg h-10 disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled={loading || zipCodeLoading}
       >
         Search
       </button>

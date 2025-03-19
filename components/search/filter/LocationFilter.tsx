@@ -16,17 +16,18 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const LocationFilter = () => {
-  const { city, setCity, state, setState, zipCodes, setZipCodes } =
+  const { city, setCity, state, setState, zipCodes, setZipCodes, zipCodeLoading, setZipCodeLoading } =
     useDogSearch();
 
   const debouncedCity = useDebounce(city, 500);
   const debouncedState = useDebounce(state, 500);
   const [locationObjects, setLocationObjects] = useState<ILocation[]>([]);
+  
   const [open, setOpen] = useState(false);
 
   // Fetch locations when debounced values change
@@ -37,6 +38,7 @@ const LocationFilter = () => {
       if (!debouncedCity && !debouncedState) return;
 
       try {
+        setZipCodeLoading(true);
         const params: ILocationSearchParams = {};
         if (debouncedCity) params.city = debouncedCity;
         if (debouncedState) params.states = [debouncedState];
@@ -53,6 +55,8 @@ const LocationFilter = () => {
         }
       } catch (error) {
         handleError(error);
+      } finally {
+        setZipCodeLoading(false);
       }
     };
 
@@ -64,6 +68,7 @@ const LocationFilter = () => {
     setState("");
     setZipCodes("");
     setLocationObjects([]);
+    setZipCodeLoading(false);
   }, []);
 
   return (
@@ -94,12 +99,17 @@ const LocationFilter = () => {
             }}
             className="min-w-full bg-white"
           >
-            <Command className="w-full">
-              <CommandInput
-                value={city}
-                onValueChange={setCity}
-                placeholder="City"
-                className="w-full"
+            {zipCodeLoading ? (
+              <Loader2   className="animate-spin w-full items-center justify-center" />
+            ) : (
+              <>
+           
+                <Command className="w-full">
+                  <CommandInput
+                    value={city}
+                    onValueChange={setCity}
+                    placeholder="City"
+                    className="w-full text-xs"
               />
               <CustomCommandList className="max-h-[200px] overflow-y-auto w-full">
                 {locationObjects.length > 0 && (
@@ -149,7 +159,7 @@ const LocationFilter = () => {
                 value={state}
                 onValueChange={(value) => setState(value.toUpperCase())}
                 placeholder="State"
-                className="w-full"
+                className="w-full text-xs"
               />
               <CustomCommandList className="max-h-[200px] overflow-y-auto w-full">
                 {locationObjects.length > 0 && (
@@ -199,8 +209,8 @@ const LocationFilter = () => {
               <CommandInput
                 value={zipCodes}
                 onValueChange={setZipCodes}
-                placeholder="Comma separated zip codes"
-                className="w-full"
+                placeholder="ZIP: max 25 Comma separated"
+                className="w-full text-xs"
               />
               <CustomCommandList className="max-h-[200px] overflow-y-auto w-full">
                 {zipCodes.length > 0 && (
@@ -221,6 +231,7 @@ const LocationFilter = () => {
                 )}
               </CustomCommandList>
             </Command>
+            </>)}
           </PopoverContent>
         </Popover>
       </div>
