@@ -25,6 +25,7 @@ const Search = () => {
     searchResults,
     setSearchResults,
     matchResult,
+   
   } = useDogSearch();
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -71,6 +72,7 @@ const Search = () => {
       params.set("sort", sort);
       params.set("from", from.toString());
       params.set("size", size);
+      console.log("sort", sort);
 
       if (selectedBreeds.length > 0) {
         selectedBreeds.forEach((breed) => {
@@ -83,7 +85,7 @@ const Search = () => {
           params.append("zipCodes", zip.trim());
         });
       }
-      console.log("zipCodes???", zipCodes);
+
       if (ageMin) params.append("ageMin", ageMin);
       if (ageMax) params.append("ageMax", ageMax);
 
@@ -156,6 +158,7 @@ const Search = () => {
 
       {/* dogmatch dialog */}
       {!loading && matchResult && <MatchDialog />}
+ 
     </div>
   );
 };

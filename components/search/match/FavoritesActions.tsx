@@ -1,40 +1,32 @@
 import { useDogSearch } from "@/contexts/DogContext";
-import { fetchDogMatch, fetchDogs } from "@/utils/getData";
-import handleError from "@/utils/handleError";
+import { useState } from "react";
+import FavoriteDialog from "./FavoriteDialog";
 const FavoritesActions = () => {
-  // favorites,
-  // setFavorites,
-  // generateMatch,
-  
-  const { setMatchResult } = useDogSearch();
-  
-  const generateMatch = async () => {
-    try {
-      const response = await fetchDogMatch({ favorites });
+  const { setFavoritedDogs, favorites, dogs, setFavorites } =
+    useDogSearch();
+  const [favoriteDialogOpen, setFavoriteDialogOpen] = useState(false);
 
-      // Fetch matched dog details
-      const matchResponse = await fetchDogs({ dogIds: [response.match] });
 
-      setMatchResult(matchResponse[0]);
-    } catch (error) {
-      handleError(error);
-    }
-  };
-  const { favorites, setFavorites } = useDogSearch();
+  
+
   return (
     <div>
       {favorites?.length > 0 && (
         <div>
+      
           <button
-            onClick={generateMatch}
+            onClick={() => {
+              setFavoriteDialogOpen(true);
+             
+            }}
             disabled={favorites.length === 0}
-            className={`bg-orange-600 text-white px-4 py-2 rounded disabled:opacity-50 hover:shadow-lg ${
+            className={`ml-4 border bg-orange-600 text-white px-4 py-2 rounded disabled:opacity-50 hover:shadow-lg ${
               favorites.length === 0
                 ? "opacity-50 cursor-not-allowed"
                 : "cursor-pointer"
             }`}
           >
-            Generate Pawfect Match
+            View Favorites
           </button>
           <button
             onClick={() => setFavorites([])}
@@ -48,6 +40,12 @@ const FavoritesActions = () => {
             Clear Favorites
           </button>
         </div>
+      )}
+      {favoriteDialogOpen && (
+        <FavoriteDialog
+          open={favoriteDialogOpen}
+          onOpenChange={() => setFavoriteDialogOpen(!favoriteDialogOpen)}
+        />
       )}
     </div>
   );
